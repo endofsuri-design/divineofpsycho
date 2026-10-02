@@ -144,7 +144,7 @@ fun SuriEsportsMasterApp() {
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Icon(
-                                Icons.Default.AddCircle,
+                                Icons.Default.Add,
                                 contentDescription = "Add",
                                 tint = Color.White,
                                 modifier = Modifier.size(18.dp)
@@ -158,9 +158,9 @@ fun SuriEsportsMasterApp() {
         bottomBar = {
             NavigationBar(containerColor = Color.White) {
                 val items = listOf(
-                    Triple("home", "Play", Icons.Default.SportsEsports),
-                    Triple("rank", "Leaderboard", Icons.Default.Leaderboard),
-                    Triple("wallet", "Wallet", Icons.Default.AccountBalanceWallet),
+                    Triple("home", "Play", Icons.Default.PlayArrow),
+                    Triple("rank", "Leaderboard", Icons.Default.Star),
+                    Triple("wallet", "Wallet", Icons.Default.ShoppingCart),
                     Triple("refer", "Refer", Icons.Default.Share)
                 )
                 items.forEach { (tab, label, icon) ->
@@ -272,7 +272,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                     modifier = Modifier.padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Default.Campaign, contentDescription = null, tint = Color.White)
+                    Icon(Icons.Default.Notifications, contentDescription = null, tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         "WITHDRAWAL COMPLETE IN 12 HOURS ⚡",
@@ -334,8 +334,8 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                MatchTabCard("Ongoing", Icons.Default.PlayCircle, Color(0xFF4CAF50), Modifier.weight(1f))
-                MatchTabCard("Upcoming", Icons.Default.Event, Color(0xFF2196F3), Modifier.weight(1f))
+                MatchTabCard("Ongoing", Icons.Default.Refresh, Color(0xFF4CAF50), Modifier.weight(1f))
+                MatchTabCard("Upcoming", Icons.Default.DateRange, Color(0xFF2196F3), Modifier.weight(1f))
                 MatchTabCard("Completed", Icons.Default.CheckCircle, Color(0xFF757575), Modifier.weight(1f))
             }
         }
@@ -410,7 +410,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                                     .background(mode.accentColor.copy(alpha = 0.15f)),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Default.SportsEsports, contentDescription = null, tint = mode.accentColor)
+                                Icon(Icons.Default.PlayArrow, contentDescription = null, tint = mode.accentColor)
                             }
                             Spacer(modifier = Modifier.width(10.dp))
                             Column {
@@ -609,7 +609,7 @@ fun ReferScreenView() {
                 .background(Color(0xFFFFEBEE)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.CardGiftcard, contentDescription = null, tint = Color(0xFFE50914), modifier = Modifier.size(46.dp))
+            Icon(Icons.Default.Favorite, contentDescription = null, tint = Color(0xFFE50914), modifier = Modifier.size(46.dp))
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text("REFER & EARN ₹50", fontWeight = FontWeight.Black, fontSize = 22.sp, color = Color(0xFF1E1E1E))
