@@ -1,11 +1,10 @@
 package com.surixesports.app
 
-import android.graphics.BitmapFactory
+import android.content.Intent
 import android.os.Bundle
-import android.util.Base64
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,449 +14,740 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-val LOGO_BASE64 = ""
-
-data class Tournament(
-    val id: Int,
+// --- Data Models ---
+data class GameMode(
+    val id: String,
     val title: String,
+    val subtitle: String,
     val map: String,
-    val prizePool: String,
-    val entryFee: String,
-    val filledSlots: Int,
-    val maxSlots: Int,
-    val timing: String
+    val prizePool: Int,
+    val entryFee: Int,
+    val spots: String,
+    val accentColor: Color
 )
 
-data class LiveMatch(
-    val id: Int,
-    val title: String,
-    val status: String,
-    var roomId: String,
-    var roomPass: String
+data class PlayerRank(
+    val rank: Int,
+    val name: String,
+    val wins: Int,
+    val kills: Int,
+    val points: String
 )
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SurixEsportsApp()
+            SuriEsportsMasterApp()
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SurixEsportsApp() {
-    val darkColors = darkColorScheme(
-        primary = Color(0xFFFF5722),
-        secondary = Color(0xFF03DAC6),
-        background = Color(0xFF121212),
-        surface = Color(0xFF1E1E1E),
-        onPrimary = Color.White,
-        onSurface = Color.White
+fun SuriEsportsMasterApp() {
+    val context = LocalContext.current
+    var currentScreen by remember { mutableStateOf("home") }
+    var walletBalance by remember { mutableDoubleStateOf(500.0) }
+    var gamerTag by remember { mutableStateOf("SURI") }
+    var selectedMatchToJoin by remember { mutableStateOf<GameMode?>(null) }
+
+    val tournamentModes = listOf(
+        GameMode("ff_max_1", "FF MAX 1", "Full Map Clash", "Bermuda", 2000, 30, "42/50 joined", Color(0xFFFF5722)),
+        GameMode("cs_1v1", "CS 1V1", "Clash Squad Duel", "Custom 1v1", 100, 20, "1/2 joined", Color(0xFF9C27B0)),
+        GameMode("lw_1v1", "LW 1V1", "Lone Wolf Deathmatch", "Iron Cage", 150, 25, "1/2 joined", Color(0xFF3F51B5)),
+        GameMode("ff_max_2", "FF MAX 2", "Squad Hardcore", "Purgatory", 5000, 50, "84/100 joined", Color(0xFFE91E63)),
+        GameMode("cs_2v2", "CS 2V2", "Squad TDM Duel", "Warehouse", 500, 40, "3/4 joined", Color(0xFFFF9800)),
+        GameMode("lw_2v2", "LW 2V2", "Duo Showdown", "Lone Arena", 600, 50, "2/4 joined", Color(0xFF009688))
     )
 
-    val logoBitmap = remember {
-        try {
-            if (LOGO_BASE64.isNotEmpty()) {
-                val decodedBytes = Base64.decode(LOGO_BASE64, Base64.DEFAULT)
-                BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)?.asImageBitmap()
-            } else null
-        } catch (e: Exception) {
-            null
-        }
-    }
+    val topRankers = listOf(
+        PlayerRank(1, "jinwoo", 98, 210, "5,676"),
+        PlayerRank(2, "ashish07", 84, 180, "5,442"),
+        PlayerRank(3, "mg_gamer00", 72, 140, "4,770"),
+        PlayerRank(4, "Arulraj", 65, 120, "4,624"),
+        PlayerRank(5, "RaviLord", 51, 95, "4,400"),
+        PlayerRank(6, "minato007", 49, 88, "4,250")
+    )
 
-    MaterialTheme(colorScheme = darkColors) {
-        var currentScreen by remember { mutableStateOf("tournaments") }
-        var walletBalance by remember { mutableStateOf(20200) }
-
-        val tournaments = remember {
-            mutableStateListOf(
-                Tournament(1, "BGMI Sunday Squad War", "Erangel", "₹5,000", "₹50", 84, 100, "Today 8:00 PM"),
-                Tournament(2, "Free Fire Solo Clash", "Bermuda", "₹2,000", "₹30", 42, 50, "Today 9:30 PM"),
-                Tournament(3, "TDM Hardcore 4v4", "Warehouse", "₹1,000", "₹20", 16, 16, "Running")
-            )
-        }
-
-        val liveMatches = remember {
-            mutableStateListOf(
-                LiveMatch(1, "BGMI Championship Finals", "LIVE NOW", "849201", "7788"),
-                LiveMatch(2, "Free Fire Night Scrims", "STARTING SOON", "Locked", "Locked")
-            )
-        }
-
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            if (logoBitmap != null) {
-                                Image(
-                                    bitmap = logoBitmap,
-                                    contentDescription = "Logo",
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                    contentScale = ContentScale.Crop
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
-                            }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Custom Brand Logo Badge
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(Color(0xFFE50914), Color(0xFF8B0000))
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Text(
-                                text = "DIVINE OF PSYCHO",
+                                "SE",
                                 fontWeight = FontWeight.Black,
-                                letterSpacing = 1.2.sp,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = 18.sp
+                                color = Color.White,
+                                fontSize = 16.sp
                             )
                         }
-                    },
-                    actions = {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                "SURI ESPORTS",
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF111111),
+                                fontSize = 16.sp,
+                                letterSpacing = 1.sp
+                            )
+                            Text(
+                                "PRO TOURNAMENT ARENA",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    // Wallet Chip with quick add
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = Color(0xFF1E1E1E),
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                            .clickable { currentScreen = "wallet" }
+                    ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(Color(0xFF2C2C2C))
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                                .clickable { currentScreen = "wallet" }
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            Text(text = "₹ $walletBalance", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
+                            Text(
+                                "₹${walletBalance.toInt()}",
+                                fontWeight = FontWeight.ExtraBold,
+                                color = Color(0xFF4CAF50),
+                                fontSize = 14.sp
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Icon(
+                                Icons.Default.AddCircle,
+                                contentDescription = "Add",
+                                tint = Color.White,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+            )
+        },
+        bottomBar = {
+            NavigationBar(containerColor = Color.White, tonalElevation = 8.dp) {
+                val items = listOf(
+                    Triple("home", "Play", Icons.Default.SportsEsports),
+                    Triple("rank", "Leaderboard", Icons.Default.Leaderboard),
+                    Triple("wallet", "Wallet", Icons.Default.AccountBalanceWallet),
+                    Triple("refer", "Refer", Icons.Default.Share)
+                )
+                items.forEach { (tab, label, icon) ->
+                    NavigationBarItem(
+                        icon = { Icon(icon, contentDescription = label) },
+                        label = { Text(label, fontWeight = FontWeight.Bold, fontSize = 11.sp) },
+                        selected = currentScreen == tab,
+                        onClick = { currentScreen = tab },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color(0xFFE50914),
+                            selectedTextColor = Color(0xFFE50914),
+                            indicatorColor = Color(0xFFFFEBEE),
+                            unselectedIconColor = Color.Gray,
+                            unselectedTextColor = Color.Gray
+                        )
+                    )
+                }
+            }
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(Color(0xFFF6F7F9))
+        ) {
+            when (currentScreen) {
+                "home" -> HomeScreenView(
+                    modes = tournamentModes,
+                    onJoinClick = { mode -> selectedMatchToJoin = mode }
+                )
+                "rank" -> RankScreenView(topRankers)
+                "wallet" -> WalletScreenView(
+                    balance = walletBalance,
+                    onAddFunds = { add ->
+                        walletBalance += add
+                        Toast.makeText(context, "Added ₹$add successfully!", Toast.LENGTH_SHORT).show()
+                    },
+                    onWithdraw = { withdrawAmt ->
+                        if (withdrawAmt > walletBalance) {
+                            Toast.makeText(context, "Insufficient Balance!", Toast.LENGTH_SHORT).show()
+                        } else if (withdrawAmt < 50) {
+                            Toast.makeText(context, "Minimum withdrawal is ₹50", Toast.LENGTH_SHORT).show()
+                        } else {
+                            walletBalance -= withdrawAmt
+                            Toast.makeText(context, "Withdrawal Request of ₹$withdrawAmt Sent!", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                )
+                "refer" -> ReferScreenView()
+            }
+
+            // Join Confirmation Dialog
+            selectedMatchToJoin?.let { mode ->
+                AlertDialog(
+                    onDismissRequest = { selectedMatchToJoin = null },
+                    title = { Text("Join ${mode.title}", fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column {
+                            Text("Map: ${mode.map}")
+                            Text("Entry Fee: ₹${mode.entryFee}", fontWeight = FontWeight.Bold)
+                            Text("Prize Pool: ₹${mode.prizePool}", color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("Room ID & Password match shuru hone se 15 min pehle notification me milega.", fontSize = 12.sp, color = Color.Gray)
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF181818))
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                if (walletBalance >= mode.entryFee) {
+                                    walletBalance -= mode.entryFee
+                                    Toast.makeText(context, "Joined ${mode.title}! Fee deducted.", Toast.LENGTH_SHORT).show()
+                                    selectedMatchToJoin = null
+                                } else {
+                                    Toast.makeText(context, "Insufficient balance! Please recharge wallet.", Toast.LENGTH_LONG).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
+                        ) {
+                            Text("Confirm & Pay ₹${mode.entryFee}")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { selectedMatchToJoin = null }) {
+                            Text("Cancel")
+                        }
+                    }
                 )
-            },
-            bottomBar = {
-                NavigationBar(containerColor = Color(0xFF181818)) {
-                    val navItems = listOf(
-                        Triple("tournaments", "Matches", Icons.Default.Home),
-                        Triple("live", "Live", Icons.Default.PlayArrow),
-                        Triple("wallet", "Wallet", Icons.Default.AccountBox),
-                        Triple("profile", "Profile", Icons.Default.Person),
-                        Triple("admin", "Admin", Icons.Default.Lock)
+            }
+        }
+    }
+}
+
+// ----------------- HOME SCREEN -----------------
+@Composable
+fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
+    var selectedCategory by remember { mutableStateOf("TOURNAMENT") }
+    val context = LocalContext.current
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(6.dp))
+            // 12-Hour Withdrawal Assurance Banner
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFFF6F00),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Campaign, contentDescription = null, tint = Color.White)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        "WITHDRAWAL COMPLETE IN 12 HOURS ⚡",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
                     )
-                    navItems.forEach { (route, label, icon) ->
-                        NavigationBarItem(
-                            icon = { Icon(icon, contentDescription = label) },
-                            label = { Text(label, fontSize = 10.sp) },
-                            selected = currentScreen == route,
-                            onClick = { currentScreen = route },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MaterialTheme.colorScheme.primary,
-                                indicatorColor = Color(0xFF2A2A2A),
-                                unselectedIconColor = Color.Gray,
-                                unselectedTextColor = Color.Gray,
-                                selectedTextColor = MaterialTheme.colorScheme.primary
-                            )
+                }
+            }
+        }
+
+        // Big Esports Hero Banner
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364))
+                        )
+                    )
+                    .padding(16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Column {
+                    Surface(
+                        color = Color(0xFFE50914),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text(
+                            " LIVE ESPORTS ",
+                            color = Color.White,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                         )
                     }
-                }
-            }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .background(Color(0xFF121212))
-            ) {
-                when (currentScreen) {
-                    "tournaments" -> TournamentListScreen(tournaments)
-                    "live" -> LiveMatchesScreen(liveMatches)
-                    "wallet" -> WalletScreen(walletBalance) { added -> walletBalance += added }
-                    "profile" -> ProfileScreen(logoBitmap)
-                    "admin" -> AdminScreen(
-                        onAddTournament = { tournaments.add(it) }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        "PLAY HARD, WIN CASH!",
+                        color = Color.White,
+                        fontWeight = FontWeight.Black,
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        "Free Fire & BGMI Daily Custom Scrims",
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 12.sp
                     )
                 }
             }
         }
-    }
-}
 
-@Composable
-fun TournamentListScreen(list: List<Tournament>) {
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(12.dp)) {
-        items(list) { tourney ->
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-                shape = RoundedCornerShape(14.dp),
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        // My Matches Filter Strip
+        item {
+            Text("My Matches", fontWeight = FontWeight.Bold, color = Color(0xFF222222), fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                MatchTabCard("Ongoing", Icons.Default.PlayCircle, Color(0xFF4CAF50), Modifier.weight(1f))
+                MatchTabCard("Upcoming", Icons.Default.Event, Color(0xFF2196F3), Modifier.weight(1f))
+                MatchTabCard("Completed", Icons.Default.CheckCircle, Color(0xFF757575), Modifier.weight(1f))
+            }
+        }
+
+        // Mode Switching Switch
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color.White)
+                    .padding(4.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (selectedCategory == "TOURNAMENT") Color(0xFF1E1E1E) else Color.Transparent)
+                        .clickable { selectedCategory = "TOURNAMENT" }
+                        .padding(vertical = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "TOURNAMENT",
+                        fontWeight = FontWeight.Bold,
+                        color = if (selectedCategory == "TOURNAMENT") Color.White else Color.Gray,
+                        fontSize = 13.sp
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (selectedCategory == "SOLO") Color(0xFF1E1E1E) else Color.Transparent)
+                        .clickable { selectedCategory = "SOLO" }
+                        .padding(vertical = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "SOLO 1V1",
+                        fontWeight = FontWeight.Bold,
+                        color = if (selectedCategory == "SOLO") Color.White else Color.Gray,
+                        fontSize = 13.sp
+                    )
+                }
+            }
+        }
+
+        // Tournament Cards List
+        val filteredList = if (selectedCategory == "SOLO") {
+            modes.filter { it.title.contains("1V1") }
+        } else {
+            modes
+        }
+
+        items(filteredList) { mode ->
+            Card(
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(tourney.title, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.White)
-                        Badge(containerColor = Color(0xFF333333)) {
-                            Text(tourney.map, modifier = Modifier.padding(4.dp), color = Color(0xFFFFB300))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(mode.accentColor.copy(alpha = 0.15f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(Icons.Default.SportsEsports, contentDescription = null, tint = mode.accentColor)
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text(mode.title, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = Color(0xFF1A1A1A))
+                                Text(mode.subtitle, fontSize = 12.sp, color = Color.Gray)
+                            }
+                        }
+
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = Color(0xFFF0F0F0)
+                        ) {
+                            Text(
+                                mode.map,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF555555),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Divider(color = Color(0xFFEEEEEE), thickness = 1.dp)
                     Spacer(modifier = Modifier.height(10.dp))
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("PRIZE POOL", fontSize = 11.sp, color = Color.Gray)
-                            Text(tourney.prizePool, fontWeight = FontWeight.ExtraBold, color = Color(0xFF4CAF50), fontSize = 15.sp)
+                            Text("PRIZE POOL", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
+                            Text("₹${mode.prizePool}", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF4CAF50))
                         }
+
                         Column {
-                            Text("ENTRY FEE", fontSize = 11.sp, color = Color.Gray)
-                            Text(tourney.entryFee, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 15.sp)
+                            Text("ENTRY FEE", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
+                            Text("₹${mode.entryFee}", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFFE50914))
                         }
-                        Column {
-                            Text("TIME", fontSize = 11.sp, color = Color.Gray)
-                            Text(tourney.timing, fontSize = 13.sp, color = Color.LightGray)
+
+                        Button(
+                            onClick = { onJoinClick(mode) },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914)),
+                            contentPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
+                        ) {
+                            Text("JOIN", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                         }
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    LinearProgressIndicator(
-                        progress = { tourney.filledSlots.toFloat() / tourney.maxSlots },
-                        modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
-                        color = Color(0xFFFF5722),
-                        trackColor = Color(0xFF333333)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(mode.spots, fontSize = 11.sp, color = Color.Gray)
+                }
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+}
+
+@Composable
+fun MatchTabCard(title: String, icon: ImageVector, color: Color, modifier: Modifier) {
+    val context = LocalContext.current
+    Surface(
+        shape = RoundedCornerShape(10.dp),
+        color = Color.White,
+        modifier = modifier
+            .clickable {
+                Toast.makeText(context, "No $title Matches right now", Toast.LENGTH_SHORT).show()
+            },
+        shadowElevation = 1.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(title, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF333333))
+        }
+    }
+}
+
+// ----------------- WALLET & WITHDRAW SCREEN -----------------
+@Composable
+fun WalletScreenView(
+    balance: Double,
+    onAddFunds: (Double) -> Unit,
+    onWithdraw: (Double) -> Unit
+) {
+    var withdrawInput by remember { mutableStateOf("") }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("TOTAL WALLET BALANCE", fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "₹${String.format("%.2f", balance)}",
+                        fontSize = 36.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color(0xFF4CAF50)
                     )
                     Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("${tourney.filledSlots}/${tourney.maxSlots} joined", fontSize = 12.sp, color = Color.Gray)
-                        Button(
-                            onClick = { },
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722))
-                        ) {
-                            Text("JOIN", fontWeight = FontWeight.Bold)
-                        }
-                    }
+                    Text("100% Safe & Instant Transfers", fontSize = 11.sp, color = Color.White.copy(alpha = 0.6f))
                 }
             }
         }
-    }
-}
 
-@Composable
-fun LiveMatchesScreen(matches: List<LiveMatch>) {
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(14.dp)) {
-        items(matches) { match ->
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(match.title, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 16.sp)
-                        Text(match.status, color = Color.Red, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                    }
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color(0xFF2C2C2C))
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Column {
-                            Text("ROOM ID", fontSize = 11.sp, color = Color.Gray)
-                            Text(match.roomId, fontWeight = FontWeight.SemiBold, color = Color.Yellow, fontSize = 16.sp)
-                        }
-                        Column {
-                            Text("PASSWORD", fontSize = 11.sp, color = Color.Gray)
-                            Text(match.roomPass, fontWeight = FontWeight.SemiBold, color = Color.Yellow, fontSize = 16.sp)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun WalletScreen(balance: Int, onAddMoney: (Int) -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("TOTAL BALANCE", fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("₹ $balance", fontSize = 36.sp, fontWeight = FontWeight.Black, color = Color(0xFF4CAF50))
-            }
-        }
-
-        Text("QUICK DEPOSIT", fontWeight = FontWeight.Bold, color = Color.White, modifier = Modifier.align(Alignment.Start))
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            listOf(50, 100, 200).forEach { amount ->
-                Button(
-                    onClick = { onAddMoney(amount) },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2C2C2C)),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text("+ ₹$amount", color = Color.White)
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = { },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Text("WITHDRAW WINNINGS", fontWeight = FontWeight.Bold)
-        }
-    }
-}
-
-@Composable
-fun ProfileScreen(logoBitmap: androidx.compose.ui.graphics.ImageBitmap?) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (logoBitmap != null) {
-            Image(
-                bitmap = logoBitmap,
-                contentDescription = "Profile Logo",
-                modifier = Modifier
-                    .size(130.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(2.dp, Color(0xFFFF5722), RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(90.dp)
-                    .clip(CircleShape)
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Black, modifier = Modifier.size(55.dp))
-            }
-        }
-
-        Spacer(modifier = Modifier.height(14.dp))
-        Text("SURI", fontWeight = FontWeight.Black, fontSize = 24.sp, color = Color.White)
-        Text("DIVINE OF PSYCHO", fontSize = 14.sp, color = Color(0xFFFF5722), fontWeight = FontWeight.ExtraBold)
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceAround) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Played", color = Color.Gray, fontSize = 12.sp)
-                    Text("48", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 16.sp)
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Won", color = Color.Gray, fontSize = 12.sp)
-                    Text("22", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50), fontSize = 16.sp)
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("K/D", color = Color.Gray, fontSize = 12.sp)
-                    Text("4.2", fontWeight = FontWeight.Bold, color = Color(0xFFFFB300), fontSize = 16.sp)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun AdminScreen(onAddTournament: (Tournament) -> Unit) {
-    var title by remember { mutableStateOf("") }
-    var entry by remember { mutableStateOf("") }
-    var prize by remember { mutableStateOf("") }
-
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         item {
-            Text("ADMIN CONTROL PANEL", fontWeight = FontWeight.ExtraBold, color = Color(0xFFFF5722), fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(14.dp))
+            Text("Quick Deposit / Add Funds", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                listOf(50.0, 100.0, 200.0).forEach { amount ->
+                    Button(
+                        onClick = { onAddFunds(amount) },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                        shape = RoundedCornerShape(10.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE50914))
+                    ) {
+                        Text("+₹${amount.toInt()}", color = Color(0xFFE50914), fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
 
+        item {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("HOST NEW TOURNAMENT", fontWeight = FontWeight.Bold, color = Color.White)
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Text("Withdraw Winnings", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text("Enter UPI ID / Amount to withdraw directly to Bank.", fontSize = 12.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(14.dp))
+
                     OutlinedTextField(
-                        value = title,
-                        onValueChange = { title = it },
-                        label = { Text("Game & Title") },
-                        modifier = Modifier.fillMaxWidth()
+                        value = withdrawInput,
+                        onValueChange = { withdrawInput = it },
+                        label = { Text("Amount (₹)") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        singleLine = true
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = entry,
-                        onValueChange = { entry = it },
-                        label = { Text("Entry Fee (₹)") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = prize,
-                        onValueChange = { prize = it },
-                        label = { Text("Prize Pool (₹)") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+
                     Spacer(modifier = Modifier.height(14.dp))
                     Button(
                         onClick = {
-                            if (title.isNotEmpty()) {
-                                onAddTournament(
-                                    Tournament(
-                                        id = (10..999).random(),
-                                        title = title,
-                                        map = "Custom",
-                                        prizePool = "₹$prize",
-                                        entryFee = "₹$entry",
-                                        filledSlots = 0,
-                                        maxSlots = 100,
-                                        timing = "Upcoming"
-                                    )
-                                )
-                                title = ""
-                                entry = ""
-                                prize = ""
-                            }
+                            val amt = withdrawInput.toDoubleOrNull() ?: 0.0
+                            onWithdraw(amt)
+                            withdrawInput = ""
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
-                        modifier = Modifier.fillMaxWidth()
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("PUBLISH TOURNAMENT", fontWeight = FontWeight.Bold)
+                        Text("REQUEST WITHDRAWAL", fontWeight = FontWeight.Bold)
                     }
                 }
             }
+        }
+    }
+}
+
+// ----------------- REFER & EARN SCREEN -----------------
+@Composable
+fun ReferScreenView() {
+    val context = LocalContext.current
+    val referCode = "SURIX100"
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .size(90.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFFFEBEE)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(Icons.Default.CardGiftcard, contentDescription = null, tint = Color(0xFFE50914), modifier = Modifier.size(46.dp))
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        Text("REFER & EARN ₹50", fontWeight = FontWeight.Black, fontSize = 22.sp, color = Color(0xFF1E1E1E))
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            "Apne dosto ko invite karein. Jaise hi wo pehla match khelenge aap dono ko ₹50 bonus milega!",
+            textAlign = TextAlign.Center,
+            fontSize = 13.sp,
+            color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = Color(0xFFEEEEEE),
+            modifier = Modifier.padding(horizontal = 20.dp)
+        ) {
+            Text(
+                "YOUR CODE: $referCode",
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 16.sp,
+                color = Color(0xFF1E1E1E),
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = {
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, "Bhai Suri Esports app download kar aur Free Fire / BGMI ke custom tournaments me paise jeet! Mera referral code use kar: $referCode")
+                }
+                context.startActivity(Intent.createChooser(shareIntent, "Share Referral Code Via"))
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914)),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(18.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("SHARE WITH FRIENDS", fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+// ----------------- RANK / LEADERBOARD SCREEN -----------------
+@Composable
+fun RankScreenView(rankers: List<PlayerRank>) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        item {
+            Text("TOP RANKED PLAYERS", fontWeight = FontWeight.Black, fontSize = 18.sp, color = Color(0xFF1E1E1E))
+            Text("Weekly tournament champions", fontSize = 12.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Top 3 Podium Cards
+            Row(
+                modifier = Modifier.fillMaxWidth().height(160.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                PodiumColumn(rankers[1], 100.dp, Color(0xFF9E9E9E), "#2")
+                PodiumColumn(rankers[0], 135.dp, Color(0xFFFFB300), "#1")
+                PodiumColumn(rankers[2], 85.dp, Color(0xFF795548), "#3")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("All Rankings", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color.Gray)
+        }
+
+        items(rankers.drop(3)) { player ->
+            Card(
+                shape = RoundedCornerShape(10.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("#${player.rank}", fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.width(30.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFFFEBEE)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(player.name.first().toString().uppercase(), fontWeight = FontWeight.Bold, color = Color(0xFFE50914))
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(player.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text("${player.wins} Wins • ${player.kills} Kills", fontSize = 11.sp, color = Color.Gray)
+                    }
+                    Text("${player.points} pts", fontWeight = FontWeight.ExtraBold, color = Color(0xFF4CAF50), fontSize = 13.sp)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun PodiumColumn(player: PlayerRank, height: androidx.compose.ui.unit.Dp, podiumColor: Color, badge: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        Text(player.name, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+        Text(badge, fontWeight = FontWeight.Black, color = podiumColor, fontSize = 14.sp)
+        Spacer(modifier = Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .width(80.dp)
+                .height(height)
+                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                .background(podiumColor),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("${player.points} pts", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 11.sp)
         }
     }
 }
