@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,10 +25,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// --- Data Models ---
 data class GameMode(
     val id: String,
     val title: String,
@@ -90,7 +89,6 @@ fun SuriEsportsMasterApp() {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        // Custom Brand Logo Badge
                         Box(
                             modifier = Modifier
                                 .size(40.dp)
@@ -115,11 +113,10 @@ fun SuriEsportsMasterApp() {
                                 "SURI ESPORTS",
                                 fontWeight = FontWeight.ExtraBold,
                                 color = Color(0xFF111111),
-                                fontSize = 16.sp,
-                                letterSpacing = 1.sp
+                                fontSize = 16.sp
                             )
                             Text(
-                                "PRO TOURNAMENT ARENA",
+                                "PRO TOURNAMENTS",
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Gray
@@ -128,7 +125,6 @@ fun SuriEsportsMasterApp() {
                     }
                 },
                 actions = {
-                    // Wallet Chip with quick add
                     Surface(
                         shape = RoundedCornerShape(20.dp),
                         color = Color(0xFF1E1E1E),
@@ -160,7 +156,7 @@ fun SuriEsportsMasterApp() {
             )
         },
         bottomBar = {
-            NavigationBar(containerColor = Color.White, tonalElevation = 8.dp) {
+            NavigationBar(containerColor = Color.White) {
                 val items = listOf(
                     Triple("home", "Play", Icons.Default.SportsEsports),
                     Triple("rank", "Leaderboard", Icons.Default.Leaderboard),
@@ -217,7 +213,6 @@ fun SuriEsportsMasterApp() {
                 "refer" -> ReferScreenView()
             }
 
-            // Join Confirmation Dialog
             selectedMatchToJoin?.let { mode ->
                 AlertDialog(
                     onDismissRequest = { selectedMatchToJoin = null },
@@ -228,7 +223,7 @@ fun SuriEsportsMasterApp() {
                             Text("Entry Fee: ₹${mode.entryFee}", fontWeight = FontWeight.Bold)
                             Text("Prize Pool: ₹${mode.prizePool}", color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Room ID & Password match shuru hone se 15 min pehle notification me milega.", fontSize = 12.sp, color = Color.Gray)
+                            Text("Room ID & Password match shuru hone se pehle update ho jayenge.", fontSize = 12.sp, color = Color.Gray)
                         }
                     },
                     confirmButton = {
@@ -236,7 +231,7 @@ fun SuriEsportsMasterApp() {
                             onClick = {
                                 if (walletBalance >= mode.entryFee) {
                                     walletBalance -= mode.entryFee
-                                    Toast.makeText(context, "Joined ${mode.title}! Fee deducted.", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Joined ${mode.title}!", Toast.LENGTH_SHORT).show()
                                     selectedMatchToJoin = null
                                 } else {
                                     Toast.makeText(context, "Insufficient balance! Please recharge wallet.", Toast.LENGTH_LONG).show()
@@ -244,7 +239,7 @@ fun SuriEsportsMasterApp() {
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
                         ) {
-                            Text("Confirm & Pay ₹${mode.entryFee}")
+                            Text("Confirm (₹${mode.entryFee})")
                         }
                     },
                     dismissButton = {
@@ -258,11 +253,9 @@ fun SuriEsportsMasterApp() {
     }
 }
 
-// ----------------- HOME SCREEN -----------------
 @Composable
 fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
     var selectedCategory by remember { mutableStateOf("TOURNAMENT") }
-    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 14.dp),
@@ -270,7 +263,6 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
     ) {
         item {
             Spacer(modifier = Modifier.height(6.dp))
-            // 12-Hour Withdrawal Assurance Banner
             Surface(
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xFFFF6F00),
@@ -292,12 +284,11 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
             }
         }
 
-        // Big Esports Hero Banner
         item {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp)
+                    .height(130.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(
                         Brush.horizontalGradient(
@@ -322,13 +313,13 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        "PLAY HARD, WIN CASH!",
+                        "PLAY HARD, WIN BIG!",
                         color = Color.White,
                         fontWeight = FontWeight.Black,
                         fontSize = 20.sp
                     )
                     Text(
-                        "Free Fire & BGMI Daily Custom Scrims",
+                        "Custom Scrims & Tournament Platform",
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 12.sp
                     )
@@ -336,7 +327,6 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
             }
         }
 
-        // My Matches Filter Strip
         item {
             Text("My Matches", fontWeight = FontWeight.Bold, color = Color(0xFF222222), fontSize = 16.sp)
             Spacer(modifier = Modifier.height(8.dp))
@@ -350,7 +340,6 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
             }
         }
 
-        // Mode Switching Switch
         item {
             Row(
                 modifier = Modifier
@@ -394,7 +383,6 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
             }
         }
 
-        // Tournament Cards List
         val filteredList = if (selectedCategory == "SOLO") {
             modes.filter { it.title.contains("1V1") }
         } else {
@@ -446,7 +434,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    Divider(color = Color(0xFFEEEEEE), thickness = 1.dp)
+                    Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color(0xFFEEEEEE)))
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Row(
@@ -509,7 +497,6 @@ fun MatchTabCard(title: String, icon: ImageVector, color: Color, modifier: Modif
     }
 }
 
-// ----------------- WALLET & WITHDRAW SCREEN -----------------
 @Composable
 fun WalletScreenView(
     balance: Double,
@@ -573,7 +560,7 @@ fun WalletScreenView(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Withdraw Winnings", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text("Enter UPI ID / Amount to withdraw directly to Bank.", fontSize = 12.sp, color = Color.Gray)
+                    Text("Enter Amount to withdraw directly to Bank / UPI.", fontSize = 12.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(14.dp))
 
                     OutlinedTextField(
@@ -581,8 +568,7 @@ fun WalletScreenView(
                         onValueChange = { withdrawInput = it },
                         label = { Text("Amount (₹)") },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp),
-                        singleLine = true
+                        shape = RoundedCornerShape(10.dp)
                     )
 
                     Spacer(modifier = Modifier.height(14.dp))
@@ -604,7 +590,6 @@ fun WalletScreenView(
     }
 }
 
-// ----------------- REFER & EARN SCREEN -----------------
 @Composable
 fun ReferScreenView() {
     val context = LocalContext.current
@@ -657,9 +642,9 @@ fun ReferScreenView() {
             onClick = {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, "Bhai Suri Esports app download kar aur Free Fire / BGMI ke custom tournaments me paise jeet! Mera referral code use kar: $referCode")
+                    putExtra(Intent.EXTRA_TEXT, "Suri Esports app join karo aur real custom matches khelo! Code: $referCode")
                 }
-                context.startActivity(Intent.createChooser(shareIntent, "Share Referral Code Via"))
+                context.startActivity(Intent.createChooser(shareIntent, "Share Referral Code"))
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914)),
             shape = RoundedCornerShape(10.dp),
@@ -672,7 +657,6 @@ fun ReferScreenView() {
     }
 }
 
-// ----------------- RANK / LEADERBOARD SCREEN -----------------
 @Composable
 fun RankScreenView(rankers: List<PlayerRank>) {
     LazyColumn(
@@ -684,7 +668,6 @@ fun RankScreenView(rankers: List<PlayerRank>) {
             Text("Weekly tournament champions", fontSize = 12.sp, color = Color.Gray)
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Top 3 Podium Cards
             Row(
                 modifier = Modifier.fillMaxWidth().height(160.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -731,7 +714,7 @@ fun RankScreenView(rankers: List<PlayerRank>) {
 }
 
 @Composable
-fun PodiumColumn(player: PlayerRank, height: androidx.compose.ui.unit.Dp, podiumColor: Color, badge: String) {
+fun PodiumColumn(player: PlayerRank, height: Dp, podiumColor: Color, badge: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
