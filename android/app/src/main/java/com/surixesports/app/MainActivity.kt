@@ -222,12 +222,13 @@ fun SuriEsportsMasterApp() {
                     Triple("home", "Play", Icons.Default.PlayArrow),
                     Triple("rank", "Leaderboard", Icons.Default.Star),
                     Triple("wallet", "Wallet", Icons.Default.ShoppingCart),
-                    Triple("refer", "Refer", Icons.Default.Share)
+                    Triple("refer", "Refer", Icons.Default.Share),
+                    Triple("support", "Support", Icons.Default.Call)
                 )
                 items.forEach { (tab, label, icon) ->
                     NavigationBarItem(
                         icon = { Icon(icon, contentDescription = label) },
-                        label = { Text(label, fontWeight = FontWeight.Bold, fontSize = 11.sp) },
+                        label = { Text(label, fontWeight = FontWeight.Bold, fontSize = 10.sp) },
                         selected = currentScreen == tab,
                         onClick = { currentScreen = tab },
                         colors = NavigationBarItemDefaults.colors(
@@ -274,6 +275,7 @@ fun SuriEsportsMasterApp() {
                     }
                 )
                 "refer" -> ReferScreenView()
+                "support" -> SupportScreenView()
             }
 
             // Tournament Join Modal
@@ -291,7 +293,7 @@ fun SuriEsportsMasterApp() {
                             Text("Prize Breakdown:", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
                             Text(mode.prizeDistribution, fontSize = 11.sp, color = Color.Gray)
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Host fee is routed to $adminUpi", fontSize = 11.sp, color = Color(0xFF1E88E5))
+                            Text("Room ID & Pass will be provided 15 min before match.", fontSize = 11.sp, color = Color(0xFF1E88E5))
                         }
                     },
                     confirmButton = {
@@ -400,7 +402,7 @@ fun DepositUpiDialog(
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Icon(Icons.Default.Payment, contentDescription = null)
+                    Icon(Icons.Default.Send, contentDescription = null)
                     Spacer(modifier = Modifier.width(6.dp))
                     Text("OPEN UPI APPS (GPay / PhonePe)", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                 }
@@ -410,7 +412,6 @@ fun DepositUpiDialog(
                     value = utrNumber,
                     onValueChange = { utrNumber = it },
                     label = { Text("Enter 12-digit UTR / Ref No.") },
-                    singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -717,9 +718,7 @@ fun WalletScreenView(
                         value = userUpiInput,
                         onValueChange = { userUpiInput = it },
                         label = { Text("Your UPI ID (e.g. name@paytm)") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp),
-                        singleLine = true
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -728,9 +727,7 @@ fun WalletScreenView(
                         value = withdrawInput,
                         onValueChange = { withdrawInput = it },
                         label = { Text("Amount (₹ Min 30)") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp),
-                        singleLine = true
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -819,6 +816,173 @@ fun ReferScreenView() {
             Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text("SHARE WITH FRIENDS", fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+fun SupportScreenView() {
+    val context = LocalContext.current
+    val adminPhone = "+260953484261"
+    val tgLink = "https://t.me/divineofpsycho"
+    val waChannelLink = "https://whatsapp.com/channel/0029Vb90behJuyAGTTbZY53z"
+    val instaUser = "siuuu_xri"
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        item {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(18.dp)) {
+                    Text(
+                        "ADMIN OFFICIAL SUPPORT 🪽",
+                        color = Color.White,
+                        fontWeight = FontWeight.Black,
+                        fontSize = 17.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "Koi bhi tournament, payment ya app problem ho toh direct Admin se sampark karein.",
+                        color = Color.LightGray,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+        }
+
+        // WhatsApp Channel
+        item {
+            SupportActionCard(
+                title = "Join WhatsApp Channel",
+                subtitle = "DIVINE OF PSYCHO 🪽 Official Channel",
+                badgeText = "OFFICIAL UPDATES",
+                badgeColor = Color(0xFF25D366),
+                icon = Icons.Default.Notifications,
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(waChannelLink))
+                    context.startActivity(intent)
+                }
+            )
+        }
+
+        // Telegram Channel
+        item {
+            SupportActionCard(
+                title = "Join Telegram Channel",
+                subtitle = "@divineofpsycho (Custom Room ID & Pass)",
+                badgeText = "MATCH ROOMS",
+                badgeColor = Color(0xFF0088CC),
+                icon = Icons.Default.Send,
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(tgLink))
+                    context.startActivity(intent)
+                }
+            )
+        }
+
+        // Direct WhatsApp Chat with Admin
+        item {
+            SupportActionCard(
+                title = "Direct Admin WhatsApp & Call",
+                subtitle = adminPhone,
+                badgeText = "24x7 HELPLINE",
+                badgeColor = Color(0xFF4CAF50),
+                icon = Icons.Default.Call,
+                onClick = {
+                    val cleanPhone = adminPhone.replace("+", "").trim()
+                    val waIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=$cleanPhone&text=Hello%20Admin%20Suri%20Esports,%20I%20need%20help."))
+                    try {
+                        context.startActivity(waIntent)
+                    } catch (e: Exception) {
+                        val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$adminPhone"))
+                        context.startActivity(dialIntent)
+                    }
+                }
+            )
+        }
+
+        // Instagram Handle
+        item {
+            SupportActionCard(
+                title = "Follow on Instagram",
+                subtitle = "@$instaUser",
+                badgeText = "INSTAGRAM",
+                badgeColor = Color(0xFFE1306C),
+                icon = Icons.Default.Person,
+                onClick = {
+                    val instaIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/_u/$instaUser"))
+                    instaIntent.setPackage("com.instagram.android")
+                    try {
+                        context.startActivity(instaIntent)
+                    } catch (e: Exception) {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/$instaUser")))
+                    }
+                }
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+}
+
+@Composable
+fun SupportActionCard(
+    title: String,
+    subtitle: String,
+    badgeText: String,
+    badgeColor: Color,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(badgeColor.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(icon, contentDescription = null, tint = badgeColor, modifier = Modifier.size(24.dp))
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Surface(
+                    shape = RoundedCornerShape(4.dp),
+                    color = badgeColor.copy(alpha = 0.12f)
+                ) {
+                    Text(
+                        badgeText,
+                        color = badgeColor,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color(0xFF1E1E1E))
+                Text(subtitle, fontSize = 11.sp, color = Color.Gray)
+            }
+            Icon(Icons.Default.ArrowForward, contentDescription = null, tint = Color.LightGray)
         }
     }
 }
