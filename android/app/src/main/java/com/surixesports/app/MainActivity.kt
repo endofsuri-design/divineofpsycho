@@ -88,7 +88,7 @@ fun SuriEsportsMasterApp() {
             winnerPrize = "1st: ₹200",
             prizePool = 380,
             spots = "38/48 joined",
-            prizeDistribution = "1st: ₹200 | 2nd: ₹100 | 3rd: ₹50 | 4th-5th: ₹15",
+            prizeDistribution = "1st: ₹200 | 2nd: ₹100 | 3rd: ₹50 | 4th-5th: ₹15 (Host: ₹100)",
             accentColor = Color(0xFFFF5722)
         ),
         GameMode(
@@ -116,6 +116,30 @@ fun SuriEsportsMasterApp() {
             accentColor = Color(0xFF3F51B5)
         ),
         GameMode(
+            id = "cs_2v2",
+            title = "CS 2V2 DUO",
+            subtitle = "2 Teams vs 2 Teams",
+            map = "Warehouse",
+            entryFee = 30,
+            winnerPrize = "Winner Team: ₹50",
+            prizePool = 50,
+            spots = "1/2 teams",
+            prizeDistribution = "Winning Team: ₹50 (Host Fee: ₹10)",
+            accentColor = Color(0xFFFF9800)
+        ),
+        GameMode(
+            id = "lw_2v2",
+            title = "LONE WOLF 2V2",
+            subtitle = "Duo Cage Fight",
+            map = "Lone Arena",
+            entryFee = 50,
+            winnerPrize = "Winner Team: ₹80",
+            prizePool = 80,
+            spots = "1/2 teams",
+            prizeDistribution = "Winning Team: ₹80 (Host Fee: ₹20)",
+            accentColor = Color(0xFF009688)
+        ),
+        GameMode(
             id = "ff_squad",
             title = "FF MAX SQUAD",
             subtitle = "12 Squads / 48 Players",
@@ -124,20 +148,8 @@ fun SuriEsportsMasterApp() {
             winnerPrize = "1st Squad: ₹240",
             prizePool = 360,
             spots = "9/12 squads",
-            prizeDistribution = "1st Squad: ₹240 | 2nd Squad: ₹120 (Admin: ₹120)",
+            prizeDistribution = "1st Squad: ₹240 | 2nd Squad: ₹120 (Host Profit: ₹120)",
             accentColor = Color(0xFFE91E63)
-        ),
-        GameMode(
-            id = "cs_2v2",
-            title = "CS 2V2 DUO",
-            subtitle = "Duo vs Duo TDM",
-            map = "Warehouse",
-            entryFee = 30,
-            winnerPrize = "Winner Duo: ₹100",
-            prizePool = 100,
-            spots = "3/4 joined",
-            prizeDistribution = "Winning Team: ₹100 | Organizer: ₹20",
-            accentColor = Color(0xFFFF9800)
         )
     )
 
@@ -278,7 +290,7 @@ fun SuriEsportsMasterApp() {
                 "support" -> SupportScreenView()
             }
 
-            // Tournament Join Modal
+            // Tournament Join Confirmation Dialog
             selectedMatchToJoin?.let { mode ->
                 AlertDialog(
                     onDismissRequest = { selectedMatchToJoin = null },
@@ -504,7 +516,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                         fontSize = 19.sp
                     )
                     Text(
-                        "Daily 1v1 Duels & 48-Player Full Map Matches",
+                        "Fair Scrims & Tournament Platform",
                         color = Color.White.copy(alpha = 0.85f),
                         fontSize = 12.sp
                     )
@@ -520,7 +532,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                     .background(Color.White)
                     .padding(4.dp)
             ) {
-                listOf("ALL", "SOLO 1V1", "FULL MAP").forEach { tab ->
+                listOf("ALL", "SOLO 1V1", "DUO 2V2", "FULL MAP").forEach { tab ->
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -534,7 +546,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                             tab,
                             fontWeight = FontWeight.Bold,
                             color = if (selectedCategory == tab) Color.White else Color.Gray,
-                            fontSize = 12.sp
+                            fontSize = 11.sp
                         )
                     }
                 }
@@ -543,6 +555,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
 
         val filteredList = when (selectedCategory) {
             "SOLO 1V1" -> modes.filter { it.title.contains("1V1") }
+            "DUO 2V2" -> modes.filter { it.title.contains("2V2") }
             "FULL MAP" -> modes.filter { it.title.contains("FULL MAP") || it.title.contains("SQUAD") }
             else -> modes
         }
