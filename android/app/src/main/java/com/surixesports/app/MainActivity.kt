@@ -3,6 +3,7 @@ package com.surixesports.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,19 +12,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// --- Data Models ---
 data class Tournament(
     val id: Int,
     val title: String,
@@ -87,12 +91,15 @@ fun SurixEsportsApp() {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(
-                            text = "SURIX ESPORTS",
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 1.5.sp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "DIVINE OF PSYCHO",
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 1.2.sp,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 18.sp
+                            )
+                        }
                     },
                     actions = {
                         Row(
@@ -104,8 +111,6 @@ fun SurixEsportsApp() {
                                 .clickable { currentScreen = "wallet" }
                         ) {
                             Text(text = "₹ $walletBalance", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Icon(Icons.Default.AccountBalanceWallet, contentDescription = "Wallet", tint = Color.White, modifier = Modifier.size(18.dp))
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF181818))
@@ -114,11 +119,11 @@ fun SurixEsportsApp() {
             bottomBar = {
                 NavigationBar(containerColor = Color(0xFF181818)) {
                     val navItems = listOf(
-                        Triple("tournaments", "Tournaments", Icons.Default.SportsEsports),
-                        Triple("live", "Live", Icons.Default.PlayCircle),
-                        Triple("wallet", "Wallet", Icons.Default.AccountBalanceWallet),
+                        Triple("tournaments", "Matches", Icons.Default.Home),
+                        Triple("live", "Live", Icons.Default.PlayArrow),
+                        Triple("wallet", "Wallet", Icons.Default.AccountBox),
                         Triple("profile", "Profile", Icons.Default.Person),
-                        Triple("admin", "Admin", Icons.Default.AdminPanelSettings)
+                        Triple("admin", "Admin", Icons.Default.Lock)
                     )
                     navItems.forEach { (route, label, icon) ->
                         NavigationBarItem(
@@ -159,7 +164,6 @@ fun SurixEsportsApp() {
     }
 }
 
-// --- Screen 1: Tournaments List ---
 @Composable
 fun TournamentListScreen(list: List<Tournament>) {
     LazyColumn(modifier = Modifier.fillMaxSize().padding(12.dp)) {
@@ -213,11 +217,11 @@ fun TournamentListScreen(list: List<Tournament>) {
                     ) {
                         Text("${tourney.filledSlots}/${tourney.maxSlots} joined", fontSize = 12.sp, color = Color.Gray)
                         Button(
-                            onClick = { /* Join Logic */ },
+                            onClick = { },
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722))
                         ) {
-                            Text("JOIN MATCH", fontWeight = FontWeight.Bold)
+                            Text("JOIN", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -226,7 +230,6 @@ fun TournamentListScreen(list: List<Tournament>) {
     }
 }
 
-// --- Screen 2: Live Matches ---
 @Composable
 fun LiveMatchesScreen(matches: List<LiveMatch>) {
     LazyColumn(modifier = Modifier.fillMaxSize().padding(14.dp)) {
@@ -262,7 +265,6 @@ fun LiveMatchesScreen(matches: List<LiveMatch>) {
     }
 }
 
-// --- Screen 3: Wallet Screen ---
 @Composable
 fun WalletScreen(balance: Int, onAddMoney: (Int) -> Unit) {
     Column(
@@ -296,7 +298,7 @@ fun WalletScreen(balance: Int, onAddMoney: (Int) -> Unit) {
         }
         Spacer(modifier = Modifier.height(24.dp))
         Button(
-            onClick = { /* Withdraw */ },
+            onClick = { },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
             shape = RoundedCornerShape(10.dp)
@@ -306,7 +308,6 @@ fun WalletScreen(balance: Int, onAddMoney: (Int) -> Unit) {
     }
 }
 
-// --- Screen 4: User Profile ---
 @Composable
 fun ProfileScreen() {
     Column(
@@ -315,16 +316,16 @@ fun ProfileScreen() {
     ) {
         Box(
             modifier = Modifier
-                .size(80.dp)
+                .size(100.dp)
                 .clip(CircleShape)
-                .background(Color(0xFFFF5722)),
+                .background(Color.White),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.Person, contentDescription = null, tint = Color.White, modifier = Modifier.size(46.dp))
+            Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Black, modifier = Modifier.size(60.dp))
         }
         Spacer(modifier = Modifier.height(12.dp))
-        Text("SurixProGamer", fontWeight = FontWeight.Bold, fontSize = 20.sp, color = Color.White)
-        Text("player@surixesports.in", fontSize = 13.sp, color = Color.Gray)
+        Text("SURI", fontWeight = FontWeight.Black, fontSize = 22.sp, color = Color.White)
+        Text("DIVINE OF PSYCHO", fontSize = 13.sp, color = Color(0xFFFF5722), fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(24.dp))
 
         Card(
@@ -335,22 +336,21 @@ fun ProfileScreen() {
             Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceAround) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Played", color = Color.Gray, fontSize = 12.sp)
-                    Text("28", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 16.sp)
+                    Text("48", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 16.sp)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Won", color = Color.Gray, fontSize = 12.sp)
-                    Text("11", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50), fontSize = 16.sp)
+                    Text("22", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50), fontSize = 16.sp)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("K/D", color = Color.Gray, fontSize = 12.sp)
-                    Text("3.4", fontWeight = FontWeight.Bold, color = Color(0xFFFFB300), fontSize = 16.sp)
+                    Text("4.2", fontWeight = FontWeight.Bold, color = Color(0xFFFFB300), fontSize = 16.sp)
                 }
             }
         }
     }
 }
 
-// --- Screen 5: Admin Panel ---
 @Composable
 fun AdminScreen(onAddTournament: (Tournament) -> Unit, liveMatches: MutableList<LiveMatch>) {
     var title by remember { mutableStateOf("") }
