@@ -1,6 +1,7 @@
 package com.surixesports.app
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -24,8 +25,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -37,9 +40,11 @@ data class GameMode(
     val title: String,
     val subtitle: String,
     val map: String,
-    val prizePool: Int,
     val entryFee: Int,
+    val winnerPrize: String,
+    val prizePool: Int,
     val spots: String,
+    val prizeDistribution: String,
     val accentColor: Color
 )
 
@@ -65,16 +70,75 @@ class MainActivity : ComponentActivity() {
 fun SuriEsportsMasterApp() {
     val context = LocalContext.current
     var currentScreen by remember { mutableStateOf("home") }
-    var walletBalance by remember { mutableDoubleStateOf(500.0) }
+    var walletBalance by remember { mutableDoubleStateOf(200.0) }
+    var adminProfitPool by remember { mutableDoubleStateOf(110.0) }
     var selectedMatchToJoin by remember { mutableStateOf<GameMode?>(null) }
+    var showDepositDialog by remember { mutableStateOf(false) }
+    var depositSelectedAmount by remember { mutableStateOf(25.0) }
+
+    val adminUpi = "x1prince@fam"
 
     val tournamentModes = listOf(
-        GameMode("ff_max_1", "FF MAX 1", "Full Map Clash", "Bermuda", 2000, 30, "42/50 joined", Color(0xFFFF5722)),
-        GameMode("cs_1v1", "CS 1V1", "Clash Squad Duel", "Custom 1v1", 100, 20, "1/2 joined", Color(0xFF9C27B0)),
-        GameMode("lw_1v1", "LW 1V1", "Lone Wolf Deathmatch", "Iron Cage", 150, 25, "1/2 joined", Color(0xFF3F51B5)),
-        GameMode("ff_max_2", "FF MAX 2", "Squad Hardcore", "Purgatory", 5000, 50, "84/100 joined", Color(0xFFE91E63)),
-        GameMode("cs_2v2", "CS 2V2", "Squad TDM Duel", "Warehouse", 500, 40, "3/4 joined", Color(0xFFFF9800)),
-        GameMode("lw_2v2", "LW 2V2", "Duo Showdown", "Lone Arena", 600, 50, "2/4 joined", Color(0xFF009688))
+        GameMode(
+            id = "ff_full_solo",
+            title = "FF MAX FULL MAP",
+            subtitle = "48 Players Solo Battle",
+            map = "Bermuda",
+            entryFee = 10,
+            winnerPrize = "1st: ₹200",
+            prizePool = 380,
+            spots = "38/48 joined",
+            prizeDistribution = "1st: ₹200 | 2nd: ₹100 | 3rd: ₹50 | 4th-5th: ₹15",
+            accentColor = Color(0xFFFF5722)
+        ),
+        GameMode(
+            id = "cs_1v1",
+            title = "CS 1V1 DUEL",
+            subtitle = "Clash Squad Quick 1v1",
+            map = "Custom Room",
+            entryFee = 25,
+            winnerPrize = "Winner: ₹40",
+            prizePool = 40,
+            spots = "1/2 joined",
+            prizeDistribution = "Winner: ₹40 (Host Fee: ₹10)",
+            accentColor = Color(0xFF9C27B0)
+        ),
+        GameMode(
+            id = "lw_1v1",
+            title = "LONE WOLF 1V1",
+            subtitle = "Iron Cage Deathmatch",
+            map = "Iron Cage",
+            entryFee = 25,
+            winnerPrize = "Winner: ₹40",
+            prizePool = 40,
+            spots = "1/2 joined",
+            prizeDistribution = "Winner: ₹40 (Host Fee: ₹10)",
+            accentColor = Color(0xFF3F51B5)
+        ),
+        GameMode(
+            id = "ff_squad",
+            title = "FF MAX SQUAD",
+            subtitle = "12 Squads / 48 Players",
+            map = "Purgatory",
+            entryFee = 40,
+            winnerPrize = "1st Squad: ₹240",
+            prizePool = 360,
+            spots = "9/12 squads",
+            prizeDistribution = "1st Squad: ₹240 | 2nd Squad: ₹120 (Admin: ₹120)",
+            accentColor = Color(0xFFE91E63)
+        ),
+        GameMode(
+            id = "cs_2v2",
+            title = "CS 2V2 DUO",
+            subtitle = "Duo vs Duo TDM",
+            map = "Warehouse",
+            entryFee = 30,
+            winnerPrize = "Winner Duo: ₹100",
+            prizePool = 100,
+            spots = "3/4 joined",
+            prizeDistribution = "Winning Team: ₹100 | Organizer: ₹20",
+            accentColor = Color(0xFFFF9800)
+        )
     )
 
     val topRankers = listOf(
@@ -91,7 +155,6 @@ fun SuriEsportsMasterApp() {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        // Samurai Brand Logo Display
                         Image(
                             painter = painterResource(id = R.drawable.app_logo),
                             contentDescription = "Suri Esports Logo",
@@ -125,7 +188,10 @@ fun SuriEsportsMasterApp() {
                         color = Color(0xFF1E1E1E),
                         modifier = Modifier
                             .padding(end = 12.dp)
-                            .clickable { currentScreen = "wallet" }
+                            .clickable {
+                                depositSelectedAmount = 25.0
+                                showDepositDialog = true
+                            }
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -190,35 +256,42 @@ fun SuriEsportsMasterApp() {
                 "rank" -> RankScreenView(topRankers)
                 "wallet" -> WalletScreenView(
                     balance = walletBalance,
-                    onAddFunds = { add ->
-                        walletBalance += add
-                        Toast.makeText(context, "Added ₹$add successfully!", Toast.LENGTH_SHORT).show()
+                    adminProfit = adminProfitPool,
+                    adminUpi = adminUpi,
+                    onOpenDeposit = { amt ->
+                        depositSelectedAmount = amt
+                        showDepositDialog = true
                     },
-                    onWithdraw = { withdrawAmt ->
+                    onWithdraw = { withdrawAmt, userUpi ->
                         if (withdrawAmt > walletBalance) {
                             Toast.makeText(context, "Insufficient Balance!", Toast.LENGTH_SHORT).show()
-                        } else if (withdrawAmt < 50) {
-                            Toast.makeText(context, "Minimum withdrawal is ₹50", Toast.LENGTH_SHORT).show()
+                        } else if (withdrawAmt < 30) {
+                            Toast.makeText(context, "Minimum withdrawal is ₹30", Toast.LENGTH_SHORT).show()
                         } else {
                             walletBalance -= withdrawAmt
-                            Toast.makeText(context, "Withdrawal Request of ₹$withdrawAmt Sent!", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "₹$withdrawAmt withdrawal requested to $userUpi!", Toast.LENGTH_LONG).show()
                         }
                     }
                 )
                 "refer" -> ReferScreenView()
             }
 
+            // Tournament Join Modal
             selectedMatchToJoin?.let { mode ->
                 AlertDialog(
                     onDismissRequest = { selectedMatchToJoin = null },
                     title = { Text("Join ${mode.title}", fontWeight = FontWeight.Bold) },
                     text = {
                         Column {
-                            Text("Map: ${mode.map}")
-                            Text("Entry Fee: ₹${mode.entryFee}", fontWeight = FontWeight.Bold)
-                            Text("Prize Pool: ₹${mode.prizePool}", color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
+                            Text("Map: ${mode.map}", fontSize = 13.sp)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text("Entry Fee: ₹${mode.entryFee}", fontWeight = FontWeight.Bold, color = Color(0xFFE50914))
+                            Text("Winner Prize: ${mode.winnerPrize}", color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text("Prize Breakdown:", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
+                            Text(mode.prizeDistribution, fontSize = 11.sp, color = Color.Gray)
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Room ID & Password match shuru hone se 15 minute pehle update honge.", fontSize = 12.sp, color = Color.Gray)
+                            Text("Host fee is routed to $adminUpi", fontSize = 11.sp, color = Color(0xFF1E88E5))
                         }
                     },
                     confirmButton = {
@@ -226,15 +299,16 @@ fun SuriEsportsMasterApp() {
                             onClick = {
                                 if (walletBalance >= mode.entryFee) {
                                     walletBalance -= mode.entryFee
-                                    Toast.makeText(context, "Joined ${mode.title}!", Toast.LENGTH_SHORT).show()
+                                    adminProfitPool += (mode.entryFee * 0.20)
+                                    Toast.makeText(context, "Joined ${mode.title}! Fee deducted.", Toast.LENGTH_SHORT).show()
                                     selectedMatchToJoin = null
                                 } else {
-                                    Toast.makeText(context, "Insufficient balance! Please recharge wallet.", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Insufficient balance! Please add ₹${mode.entryFee}", Toast.LENGTH_LONG).show()
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
                         ) {
-                            Text("Confirm (₹${mode.entryFee})")
+                            Text("Pay ₹${mode.entryFee} & Join")
                         }
                     },
                     dismissButton = {
@@ -244,13 +318,128 @@ fun SuriEsportsMasterApp() {
                     }
                 )
             }
+
+            // Direct UPI Payment Deposit Modal
+            if (showDepositDialog) {
+                DepositUpiDialog(
+                    amount = depositSelectedAmount,
+                    adminUpi = adminUpi,
+                    onDismiss = { showDepositDialog = false },
+                    onPaymentSuccess = { utr ->
+                        walletBalance += depositSelectedAmount
+                        Toast.makeText(context, "₹${depositSelectedAmount.toInt()} deposited! Ref: $utr", Toast.LENGTH_LONG).show()
+                        showDepositDialog = false
+                    }
+                )
+            }
         }
     }
 }
 
 @Composable
+fun DepositUpiDialog(
+    amount: Double,
+    adminUpi: String,
+    onDismiss: () -> Unit,
+    onPaymentSuccess: (String) -> Unit
+) {
+    val context = LocalContext.current
+    val clipboard = LocalClipboardManager.current
+    var utrNumber by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text("Add ₹${amount.toInt()} via UPI", fontWeight = FontWeight.Bold)
+        },
+        text = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Pay directly to Official Admin UPI ID:", fontSize = 12.sp, color = Color.Gray)
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFFF0F4F8),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text("ADMIN UPI ID", fontSize = 10.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                            Text(adminUpi, fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = Color(0xFF0F2027))
+                        }
+                        Button(
+                            onClick = {
+                                clipboard.setText(AnnotatedString(adminUpi))
+                                Toast.makeText(context, "UPI ID Copied!", Toast.LENGTH_SHORT).show()
+                            },
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E1E1E))
+                        ) {
+                            Text("Copy", fontSize = 12.sp)
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(
+                    onClick = {
+                        val upiUri = Uri.parse("upi://pay?pa=$adminUpi&pn=SuriEsports&am=${amount.toInt()}&cu=INR")
+                        val upiIntent = Intent(Intent.ACTION_VIEW, upiUri)
+                        try {
+                            context.startActivity(Intent.createChooser(upiIntent, "Pay with"))
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "No UPI app found. Please copy UPI ID manually.", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Icon(Icons.Default.Payment, contentDescription = null)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("OPEN UPI APPS (GPay / PhonePe)", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+                OutlinedTextField(
+                    value = utrNumber,
+                    onValueChange = { utrNumber = it },
+                    label = { Text("Enter 12-digit UTR / Ref No.") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (utrNumber.trim().length >= 4) {
+                        onPaymentSuccess(utrNumber.trim())
+                    } else {
+                        Toast.makeText(context, "Please enter valid Ref / UTR number", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914))
+            ) {
+                Text("Verify & Add")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
 fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
-    var selectedCategory by remember { mutableStateOf("TOURNAMENT") }
+    var selectedCategory by remember { mutableStateOf("ALL") }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 14.dp),
@@ -270,10 +459,10 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                     Icon(Icons.Default.Notifications, contentDescription = null, tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        "WITHDRAWAL COMPLETE IN 12 HOURS ⚡",
+                        "FAIR PLAY: 100% INSTANT UPI WITHDRAWAL ⚡",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
+                        fontSize = 11.sp
                     )
                 }
             }
@@ -283,7 +472,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(130.dp)
+                    .height(125.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(
                         Brush.horizontalGradient(
@@ -299,7 +488,7 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                         shape = RoundedCornerShape(4.dp)
                     ) {
                         Text(
-                            " LIVE ESPORTS ",
+                            " TOURNAMENT ARENA ",
                             color = Color.White,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.ExtraBold,
@@ -308,30 +497,17 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        "PLAY HARD, WIN BIG!",
+                        "LOW ENTRY • BIG WINNINGS",
                         color = Color.White,
                         fontWeight = FontWeight.Black,
-                        fontSize = 20.sp
+                        fontSize = 19.sp
                     )
                     Text(
-                        "Custom Scrims & Tournament Platform",
-                        color = Color.White.copy(alpha = 0.8f),
+                        "Daily 1v1 Duels & 48-Player Full Map Matches",
+                        color = Color.White.copy(alpha = 0.85f),
                         fontSize = 12.sp
                     )
                 }
-            }
-        }
-
-        item {
-            Text("My Matches", fontWeight = FontWeight.Bold, color = Color(0xFF222222), fontSize = 16.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                MatchTabCard("Ongoing", Icons.Default.Refresh, Color(0xFF4CAF50), Modifier.weight(1f))
-                MatchTabCard("Upcoming", Icons.Default.DateRange, Color(0xFF2196F3), Modifier.weight(1f))
-                MatchTabCard("Completed", Icons.Default.CheckCircle, Color(0xFF757575), Modifier.weight(1f))
             }
         }
 
@@ -343,45 +519,31 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                     .background(Color.White)
                     .padding(4.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(if (selectedCategory == "TOURNAMENT") Color(0xFF1E1E1E) else Color.Transparent)
-                        .clickable { selectedCategory = "TOURNAMENT" }
-                        .padding(vertical = 10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "TOURNAMENT",
-                        fontWeight = FontWeight.Bold,
-                        color = if (selectedCategory == "TOURNAMENT") Color.White else Color.Gray,
-                        fontSize = 13.sp
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(if (selectedCategory == "SOLO") Color(0xFF1E1E1E) else Color.Transparent)
-                        .clickable { selectedCategory = "SOLO" }
-                        .padding(vertical = 10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "SOLO 1V1",
-                        fontWeight = FontWeight.Bold,
-                        color = if (selectedCategory == "SOLO") Color.White else Color.Gray,
-                        fontSize = 13.sp
-                    )
+                listOf("ALL", "SOLO 1V1", "FULL MAP").forEach { tab ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (selectedCategory == tab) Color(0xFF1E1E1E) else Color.Transparent)
+                            .clickable { selectedCategory = tab }
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            tab,
+                            fontWeight = FontWeight.Bold,
+                            color = if (selectedCategory == tab) Color.White else Color.Gray,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
             }
         }
 
-        val filteredList = if (selectedCategory == "SOLO") {
-            modes.filter { it.title.contains("1V1") }
-        } else {
-            modes
+        val filteredList = when (selectedCategory) {
+            "SOLO 1V1" -> modes.filter { it.title.contains("1V1") }
+            "FULL MAP" -> modes.filter { it.title.contains("FULL MAP") || it.title.contains("SQUAD") }
+            else -> modes
         }
 
         items(filteredList) { mode ->
@@ -409,8 +571,8 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                             }
                             Spacer(modifier = Modifier.width(10.dp))
                             Column {
-                                Text(mode.title, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = Color(0xFF1A1A1A))
-                                Text(mode.subtitle, fontSize = 12.sp, color = Color.Gray)
+                                Text(mode.title, fontWeight = FontWeight.ExtraBold, fontSize = 15.sp, color = Color(0xFF1A1A1A))
+                                Text(mode.subtitle, fontSize = 11.sp, color = Color.Gray)
                             }
                         }
 
@@ -428,9 +590,9 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color(0xFFEEEEEE)))
                     Spacer(modifier = Modifier.height(10.dp))
+                    Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color(0xFFEEEEEE)))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -438,8 +600,9 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("PRIZE POOL", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
-                            Text("₹${mode.prizePool}", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF4CAF50))
+                            Text("WINNER PRIZE", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
+                            Text(mode.winnerPrize, fontSize = 14.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF4CAF50))
+                            Text("Pool: ₹${mode.prizePool}", fontSize = 10.sp, color = Color.Gray)
                         }
 
                         Column {
@@ -457,8 +620,8 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(mode.spots, fontSize = 11.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(mode.spots, fontSize = 10.sp, color = Color.Gray)
                 }
             }
         }
@@ -470,35 +633,16 @@ fun HomeScreenView(modes: List<GameMode>, onJoinClick: (GameMode) -> Unit) {
 }
 
 @Composable
-fun MatchTabCard(title: String, icon: ImageVector, color: Color, modifier: Modifier) {
-    val context = LocalContext.current
-    Surface(
-        shape = RoundedCornerShape(10.dp),
-        color = Color.White,
-        modifier = modifier
-            .clickable {
-                Toast.makeText(context, "No $title Matches right now", Toast.LENGTH_SHORT).show()
-            },
-        shadowElevation = 1.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(title, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF333333))
-        }
-    }
-}
-
-@Composable
 fun WalletScreenView(
     balance: Double,
-    onAddFunds: (Double) -> Unit,
-    onWithdraw: (Double) -> Unit
+    adminProfit: Double,
+    adminUpi: String,
+    onOpenDeposit: (Double) -> Unit,
+    onWithdraw: (Double, String) -> Unit
 ) {
+    val context = LocalContext.current
     var withdrawInput by remember { mutableStateOf("") }
+    var userUpiInput by remember { mutableStateOf("") }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -514,33 +658,44 @@ fun WalletScreenView(
                     modifier = Modifier.padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("TOTAL WALLET BALANCE", fontSize = 12.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("YOUR AVAILABLE WALLET BALANCE", fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         "₹${String.format("%.2f", balance)}",
-                        fontSize = 36.sp,
+                        fontSize = 34.sp,
                         fontWeight = FontWeight.Black,
                         color = Color(0xFF4CAF50)
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text("100% Safe & Instant Transfers", fontSize = 11.sp, color = Color.White.copy(alpha = 0.6f))
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Surface(
+                        shape = RoundedCornerShape(6.dp),
+                        color = Color(0xFF2C2C2C)
+                    ) {
+                        Text(
+                            "Admin Profit Pool: ₹${adminProfit.toInt()} (UPI: $adminUpi)",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFFFB300),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        )
+                    }
                 }
             }
         }
 
         item {
-            Text("Quick Deposit / Add Funds", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            Text("Add Funds to Wallet (Instant UPI)", fontWeight = FontWeight.Bold, fontSize = 15.sp)
             Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                listOf(50.0, 100.0, 200.0).forEach { amount ->
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                listOf(10.0, 25.0, 50.0, 100.0).forEach { amount ->
                     Button(
-                        onClick = { onAddFunds(amount) },
+                        onClick = { onOpenDeposit(amount) },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                         shape = RoundedCornerShape(10.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE50914))
                     ) {
-                        Text("+₹${amount.toInt()}", color = Color(0xFFE50914), fontWeight = FontWeight.Bold)
+                        Text("+₹${amount.toInt()}", color = Color(0xFFE50914), fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
                 }
             }
@@ -554,23 +709,39 @@ fun WalletScreenView(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Withdraw Winnings", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text("Enter Amount to withdraw directly to Bank / UPI.", fontSize = 12.sp, color = Color.Gray)
-                    Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text("Direct Bank / UPI transfer within 12 hours.", fontSize = 11.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    OutlinedTextField(
+                        value = userUpiInput,
+                        onValueChange = { userUpiInput = it },
+                        label = { Text("Your UPI ID (e.g. name@paytm)") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        singleLine = true
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
                         value = withdrawInput,
                         onValueChange = { withdrawInput = it },
-                        label = { Text("Amount (₹)") },
+                        label = { Text("Amount (₹ Min 30)") },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
+                        singleLine = true
                     )
 
-                    Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     Button(
                         onClick = {
                             val amt = withdrawInput.toDoubleOrNull() ?: 0.0
-                            onWithdraw(amt)
+                            if (userUpiInput.trim().isEmpty()) {
+                                Toast.makeText(context, "Please enter your UPI ID first!", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+                            onWithdraw(amt, userUpiInput.trim())
                             withdrawInput = ""
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
@@ -588,7 +759,7 @@ fun WalletScreenView(
 @Composable
 fun ReferScreenView() {
     val context = LocalContext.current
-    val referCode = "SURIX100"
+    val referCode = "SURI2026"
 
     Column(
         modifier = Modifier
@@ -599,23 +770,23 @@ fun ReferScreenView() {
     ) {
         Box(
             modifier = Modifier
-                .size(90.dp)
+                .size(80.dp)
                 .clip(CircleShape)
                 .background(Color(0xFFFFEBEE)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.Favorite, contentDescription = null, tint = Color(0xFFE50914), modifier = Modifier.size(46.dp))
+            Icon(Icons.Default.Favorite, contentDescription = null, tint = Color(0xFFE50914), modifier = Modifier.size(40.dp))
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        Text("REFER & EARN ₹50", fontWeight = FontWeight.Black, fontSize = 22.sp, color = Color(0xFF1E1E1E))
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("REFER FRIENDS & WIN BONUS", fontWeight = FontWeight.Black, fontSize = 20.sp, color = Color(0xFF1E1E1E))
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "Apne dosto ko invite karein. Jaise hi wo pehla match khelenge aap dono ko ₹50 bonus milega!",
+            "Apne dosto ko app share karein. Jaise hi wo install karenge aur pehla match khelenge, dono ko ₹10 Match Discount Bonus milega!",
             textAlign = TextAlign.Center,
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             color = Color.Gray
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Surface(
             shape = RoundedCornerShape(12.dp),
@@ -625,21 +796,21 @@ fun ReferScreenView() {
             Text(
                 "YOUR CODE: $referCode",
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 16.sp,
+                fontSize = 15.sp,
                 color = Color(0xFF1E1E1E),
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
             onClick = {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, "Suri Esports app join karo aur real custom matches khelo! Code: $referCode")
+                    putExtra(Intent.EXTRA_TEXT, "Bhai Suri Esports download kar aur Free Fire / Solo 1v1 custom tournaments me prize jeet! Mera referral code: $referCode")
                 }
-                context.startActivity(Intent.createChooser(shareIntent, "Share Referral Code"))
+                context.startActivity(Intent.createChooser(shareIntent, "Share App Link"))
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE50914)),
             shape = RoundedCornerShape(10.dp),
