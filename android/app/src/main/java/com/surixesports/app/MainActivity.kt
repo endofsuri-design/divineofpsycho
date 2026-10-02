@@ -1,6 +1,8 @@
 package com.surixesports.app
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -24,11 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+val LOGO_BASE64 = ""
 
 data class Tournament(
     val id: Int,
@@ -70,6 +74,17 @@ fun SurixEsportsApp() {
         onSurface = Color.White
     )
 
+    val logoBitmap = remember {
+        try {
+            if (LOGO_BASE64.isNotEmpty()) {
+                val decodedBytes = Base64.decode(LOGO_BASE64, Base64.DEFAULT)
+                BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)?.asImageBitmap()
+            } else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     MaterialTheme(colorScheme = darkColors) {
         var currentScreen by remember { mutableStateOf("tournaments") }
         var walletBalance by remember { mutableStateOf(20200) }
@@ -94,16 +109,9 @@ fun SurixEsportsApp() {
                 TopAppBar(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            val logoResId = remember {
-                                try {
-                                    R.drawable.psycho_logo
-                                } catch (e: Exception) {
-                                    0
-                                }
-                            }
-                            if (logoResId != 0) {
+                            if (logoBitmap != null) {
                                 Image(
-                                    painter = painterResource(id = logoResId),
+                                    bitmap = logoBitmap,
                                     contentDescription = "Logo",
                                     modifier = Modifier
                                         .size(36.dp)
@@ -173,10 +181,9 @@ fun SurixEsportsApp() {
                     "tournaments" -> TournamentListScreen(tournaments)
                     "live" -> LiveMatchesScreen(liveMatches)
                     "wallet" -> WalletScreen(walletBalance) { added -> walletBalance += added }
-                    "profile" -> ProfileScreen()
+                    "profile" -> ProfileScreen(logoBitmap)
                     "admin" -> AdminScreen(
-                        onAddTournament = { tournaments.add(it) },
-                        liveMatches = liveMatches
+                        onAddTournament = { tournaments.add(it) }
                     )
                 }
             }
@@ -268,7 +275,7 @@ fun LiveMatchesScreen(matches: List<LiveMatch>) {
                         Text(match.title, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 16.sp)
                         Text(match.status, color = Color.Red, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
-                    Divider(modifier = Modifier.padding(vertical = 12.dp), color = Color(0xFF2C2C2C))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Color(0xFF2C2C2C))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Column {
                             Text("ROOM ID", fontSize = 11.sp, color = Color.Gray)
@@ -329,25 +336,17 @@ fun WalletScreen(balance: Int, onAddMoney: (Int) -> Unit) {
 }
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(logoBitmap: androidx.compose.ui.graphics.ImageBitmap?) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val logoResId = remember {
-            try {
-                R.drawable.psycho_logo
-            } catch (e: Exception) {
-                0
-            }
-        }
-
-        if (logoResId != 0) {
+        if (logoBitmap != null) {
             Image(
-                painter = painterResource(id = logoResId),
+                bitmap = logoBitmap,
                 contentDescription = "Profile Logo",
                 modifier = Modifier
-                    .size(140.dp)
+                    .size(130.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .border(2.dp, Color(0xFFFF5722), RoundedCornerShape(16.dp)),
                 contentScale = ContentScale.Crop
@@ -355,12 +354,12 @@ fun ProfileScreen() {
         } else {
             Box(
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(90.dp)
                     .clip(CircleShape)
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Black, modifier = Modifier.size(60.dp))
+                Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Black, modifier = Modifier.size(55.dp))
             }
         }
 
@@ -393,7 +392,7 @@ fun ProfileScreen() {
 }
 
 @Composable
-fun AdminScreen(onAddTournament: (Tournament) -> Unit, liveMatches: MutableList<LiveMatch>) {
+fun AdminScreen(onAddTournament: (Tournament) -> Unit) {
     var title by remember { mutableStateOf("") }
     var entry by remember { mutableStateOf("") }
     var prize by remember { mutableStateOf("") }
