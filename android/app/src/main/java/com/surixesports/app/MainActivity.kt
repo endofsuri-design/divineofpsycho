@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -70,7 +72,7 @@ fun SurixEsportsApp() {
 
     MaterialTheme(colorScheme = darkColors) {
         var currentScreen by remember { mutableStateOf("tournaments") }
-        var walletBalance by remember { mutableStateOf(450) }
+        var walletBalance by remember { mutableStateOf(20200) }
 
         val tournaments = remember {
             mutableStateListOf(
@@ -92,6 +94,24 @@ fun SurixEsportsApp() {
                 TopAppBar(
                     title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
+                            val logoResId = remember {
+                                try {
+                                    R.drawable.psycho_logo
+                                } catch (e: Exception) {
+                                    0
+                                }
+                            }
+                            if (logoResId != 0) {
+                                Image(
+                                    painter = painterResource(id = logoResId),
+                                    contentDescription = "Logo",
+                                    modifier = Modifier
+                                        .size(36.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                            }
                             Text(
                                 text = "DIVINE OF PSYCHO",
                                 fontWeight = FontWeight.Black,
@@ -314,18 +334,39 @@ fun ProfileScreen() {
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Black, modifier = Modifier.size(60.dp))
+        val logoResId = remember {
+            try {
+                R.drawable.psycho_logo
+            } catch (e: Exception) {
+                0
+            }
         }
-        Spacer(modifier = Modifier.height(12.dp))
-        Text("SURI", fontWeight = FontWeight.Black, fontSize = 22.sp, color = Color.White)
-        Text("DIVINE OF PSYCHO", fontSize = 13.sp, color = Color(0xFFFF5722), fontWeight = FontWeight.Bold)
+
+        if (logoResId != 0) {
+            Image(
+                painter = painterResource(id = logoResId),
+                contentDescription = "Profile Logo",
+                modifier = Modifier
+                    .size(140.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .border(2.dp, Color(0xFFFF5722), RoundedCornerShape(16.dp)),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Default.Person, contentDescription = "Profile", tint = Color.Black, modifier = Modifier.size(60.dp))
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+        Text("SURI", fontWeight = FontWeight.Black, fontSize = 24.sp, color = Color.White)
+        Text("DIVINE OF PSYCHO", fontSize = 14.sp, color = Color(0xFFFF5722), fontWeight = FontWeight.ExtraBold)
         Spacer(modifier = Modifier.height(24.dp))
 
         Card(
