@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,7 +23,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -63,7 +66,6 @@ fun SuriEsportsMasterApp() {
     val context = LocalContext.current
     var currentScreen by remember { mutableStateOf("home") }
     var walletBalance by remember { mutableDoubleStateOf(500.0) }
-    var gamerTag by remember { mutableStateOf("SURI") }
     var selectedMatchToJoin by remember { mutableStateOf<GameMode?>(null) }
 
     val tournamentModes = listOf(
@@ -89,34 +91,27 @@ fun SuriEsportsMasterApp() {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
+                        // Samurai Brand Logo Display
+                        Image(
+                            painter = painterResource(id = R.drawable.app_logo),
+                            contentDescription = "Suri Esports Logo",
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(40.dp)
+                                .size(42.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(
-                                    Brush.linearGradient(
-                                        listOf(Color(0xFFE50914), Color(0xFF8B0000))
-                                    )
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                "SE",
-                                fontWeight = FontWeight.Black,
-                                color = Color.White,
-                                fontSize = 16.sp
-                            )
-                        }
+                                .background(Color.White)
+                        )
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                "SURI ESPORTS",
+                                "DIVINE OF PSYCHO",
                                 fontWeight = FontWeight.ExtraBold,
                                 color = Color(0xFF111111),
-                                fontSize = 16.sp
+                                fontSize = 15.sp,
+                                letterSpacing = 0.5.sp
                             )
                             Text(
-                                "PRO TOURNAMENTS",
+                                "SURI ESPORTS ARENA",
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Gray
@@ -223,7 +218,7 @@ fun SuriEsportsMasterApp() {
                             Text("Entry Fee: ₹${mode.entryFee}", fontWeight = FontWeight.Bold)
                             Text("Prize Pool: ₹${mode.prizePool}", color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Room ID & Password match shuru hone se pehle update ho jayenge.", fontSize = 12.sp, color = Color.Gray)
+                            Text("Room ID & Password match shuru hone se 15 minute pehle update honge.", fontSize = 12.sp, color = Color.Gray)
                         }
                     },
                     confirmButton = {
