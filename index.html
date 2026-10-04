@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>DIVINE OF PSYCHO - SURI ESPORTS</title>
+  <title>DIVINE OF PSYCHO - SURI ESPORTS TOURNAMENTS</title>
   <link rel="icon" type="image/png" href="samurai_logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { background: #070b14; color: #f8fafc; font-family: 'Inter', sans-serif; padding: 24px 16px 60px; }
+
+    /* Top Logo & Branding */
     .hero-avatar-wrap { text-align: center; margin-bottom: 12px; }
     .hero-circle-logo { width: 140px; height: 140px; border-radius: 50%; padding: 4px; background: radial-gradient(circle, rgba(239,68,68,0.4), transparent); border: 2.5px solid #ef4444; margin: 0 auto; box-shadow: 0 0 25px rgba(239, 68, 68, 0.65); display: flex; align-items: center; justify-content: center; }
     .hero-circle-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #000; }
+
     .brand-title { text-align: center; font-size: 22px; font-weight: 800; letter-spacing: 1.5px; color: #ffffff; margin-top: 10px; font-family: 'Rajdhani', sans-serif; }
     .brand-sub { text-align: center; font-size: 11px; font-weight: 700; color: #f87171; letter-spacing: 1.5px; margin-bottom: 22px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; }
+
+    /* Channels Grid */
     .section-lbl { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px; margin-bottom: 10px; text-transform: uppercase; }
     .channels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
     .channel-btn { background: #111827; border: 1px solid #1f293d; border-radius: 10px; padding: 11px; font-size: 12px; font-weight: 600; color: #f1f5f9; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
@@ -21,8 +26,10 @@
     .c-tg { color: #38bdf8; }
     .c-ig { color: #f43f5e; }
     .c-chat { color: #eab308; }
+
+    /* Modes List */
     .modes-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-    .mode-card { background: #0e1526; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .mode-card { background: #0e1526; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.15s; }
     .mode-card.selected { border-color: #f43f5e; background: #161b2e; box-shadow: 0 0 14px rgba(244, 63, 94, 0.25); }
     .mode-title { font-size: 14px; font-weight: 700; color: #ffffff; }
     .mode-detail { font-size: 11px; font-weight: 600; color: #22c55e; margin-top: 3px; }
@@ -30,21 +37,30 @@
     .mode-fee-wrap { text-align: right; }
     .mode-fee { font-size: 18px; font-weight: 800; color: #f43f5e; font-family: 'Rajdhani', sans-serif; }
     .mode-fee-tag { font-size: 10px; color: #94a3b8; font-weight: 500; }
+
+    /* Step 2 UPI Payment Container */
     .upi-box-card { background: #0c1322; border: 1.5px dashed #0284c7; border-radius: 14px; padding: 18px 14px; text-align: center; }
     .upi-header-title { font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 12px; }
     .upi-display-pill { background: #050b14; border: 1.5px solid #0284c7; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .upi-id-txt { font-size: 14px; font-weight: 700; color: #38bdf8; }
+    .upi-id-txt { font-size: 14px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; }
     .btn-copy-chip { background: #1e293b; border: 1px solid #334155; color: #cbd5e1; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
-    .btn-pay-direct { width: 100%; background: #10b981; color: #042f2e; border: none; padding: 14px; border-radius: 10px; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; font-family: 'Rajdhani', sans-serif; }
+
+    .btn-pay-direct { width: 100%; background: #00e599; color: #022c22; border: none; padding: 14px; border-radius: 10px; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
   </style>
 </head>
 <body>
-  <div class="hero-avatar-wrap">
-    <div class="hero-circle-logo"><img src="samurai_logo.png" alt="Suri"></div>
-  </div>
-  <div class="brand-title">DIVINE OF PSYCHO</div>
-  <div class="brand-sub">SURI ESPORTS TOURNAMENTS 🗡️</div>
 
+  <!-- Circle Samurai Logo -->
+  <div class="hero-avatar-wrap">
+    <div class="hero-circle-logo">
+      <img src="samurai_logo.png" alt="Suri">
+    </div>
+  </div>
+
+  <div class="brand-title">DIVINE OF PSYCHO</div>
+  <div class="brand-sub">SURI ESPORTS TOURNAMENTS 🗡️️</div>
+
+  <!-- Official Admin Channels -->
   <div class="section-lbl">OFFICIAL ADMIN CHANNELS</div>
   <div class="channels-grid">
     <a href="#" class="channel-btn c-wa">📢 WA Channel</a>
@@ -53,6 +69,7 @@
     <a href="https://wa.me/917827858503" class="channel-btn c-chat">📞 Admin Chat</a>
   </div>
 
+  <!-- Step 1: Choose Game Mode -->
   <div class="section-lbl">STEP 1: CHOOSE GAME MODE</div>
   <div class="modes-list">
     <div class="mode-card selected" onclick="selectMode(this, 10)">
@@ -60,45 +77,66 @@
         <div class="mode-title">FF MAX Full Map (Solo 48)</div>
         <div class="mode-detail">1st Prize: ₹200 (Pool ₹380)</div>
       </div>
-      <div class="mode-fee-wrap"><div class="mode-fee">₹10</div><div class="mode-fee-tag">Entry</div></div>
+      <div class="mode-fee-wrap">
+        <div class="mode-fee">₹10</div>
+        <div class="mode-fee-tag">Entry</div>
+      </div>
     </div>
+
     <div class="mode-card" onclick="selectMode(this, 25)">
       <div>
         <div class="mode-title">Clash Squad 1v1 Duel</div>
         <div class="mode-detail">Winner: ₹40 (Instant)</div>
       </div>
-      <div class="mode-fee-wrap"><div class="mode-fee">₹25</div><div class="mode-fee-tag">Entry</div></div>
+      <div class="mode-fee-wrap">
+        <div class="mode-fee">₹25</div>
+        <div class="mode-fee-tag">Entry</div>
+      </div>
     </div>
+
     <div class="mode-card" onclick="selectMode(this, 25)">
       <div>
         <div class="mode-title">Lone Wolf 1v1 Deathmatch</div>
         <div class="mode-detail">Winner: ₹40 (Instant)</div>
       </div>
-      <div class="mode-fee-wrap"><div class="mode-fee">₹25</div><div class="mode-fee-tag">Entry</div></div>
+      <div class="mode-fee-wrap">
+        <div class="mode-fee">₹25</div>
+        <div class="mode-fee-tag">Entry</div>
+      </div>
     </div>
+
     <div class="mode-card" onclick="selectMode(this, 30)">
       <div>
         <div class="mode-title">CS 2v2 Duo Showdown</div>
         <div class="mode-detail yellow">Winning Team: ₹50</div>
       </div>
-      <div class="mode-fee-wrap"><div class="mode-fee">₹30</div><div class="mode-fee-tag">Entry</div></div>
+      <div class="mode-fee-wrap">
+        <div class="mode-fee">₹30</div>
+        <div class="mode-fee-tag">Entry</div>
+      </div>
     </div>
+
     <div class="mode-card" onclick="selectMode(this, 40)">
       <div>
         <div class="mode-title">FF Max Squad (12 Squads)</div>
         <div class="mode-detail">1st: ₹240 | 2nd: ₹120</div>
       </div>
-      <div class="mode-fee-wrap"><div class="mode-fee">₹40</div><div class="mode-fee-tag">Entry</div></div>
+      <div class="mode-fee-wrap">
+        <div class="mode-fee">₹40</div>
+        <div class="mode-fee-tag">Entry</div>
+      </div>
     </div>
   </div>
 
+  <!-- Step 2: Scan & Pay Entry Fee -->
   <div class="section-lbl">STEP 2: SCAN & PAY ENTRY FEE</div>
   <div class="upi-box-card">
     <div class="upi-header-title">Official Admin UPI ID:</div>
     <div class="upi-display-pill">
       <span class="upi-id-txt" id="adminUpi">x1prince@fam</span>
-      <button class="btn-copy-chip" onclick="navigator.clipboard.writeText('x1prince@fam'); alert('UPI Copied!')">COPY</button>
+      <button class="btn-copy-chip" onclick="navigator.clipboard.writeText('x1prince@fam'); alert('UPI Copied: x1prince@fam')">COPY</button>
     </div>
+
     <a id="payBtn" href="upi://pay?pa=x1prince@fam&pn=DivineOfPsycho&am=10&cu=INR" class="btn-pay-direct">
       ⚡ PAY VIA UPI APPS (GPAY / PHONEPE)
     </a>
