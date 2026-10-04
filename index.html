@@ -421,3 +421,303 @@ window.onload = function() {
   }
 };
 </script>
+<!-- ================= SURI ESPORTS FULL ADVANCED SYSTEM ================= -->
+<style>
+  /* Root Modal & Overlays */
+  .se-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #0b0f19; z-index: 99999; display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px; box-sizing: border-box; color: #fff; font-family: -apple-system, sans-serif;
+  }
+  .se-card {
+    background: #141b2d; border: 1px solid #232d42; border-radius: 12px;
+    padding: 20px; width: 100%; max-width: 420px; box-sizing: border-box; margin-bottom: 15px;
+  }
+  .se-input {
+    width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #232d42;
+    background: #0b0f19; color: #fff; font-size: 14px; margin-bottom: 12px; box-sizing: border-box;
+  }
+  .se-btn {
+    width: 100%; padding: 13px; border-radius: 8px; border: none;
+    font-size: 15px; font-weight: bold; cursor: pointer; color: #fff;
+    background: linear-gradient(90deg, #ff385c, #ff6b81); margin-top: 5px;
+  }
+  .se-btn-green { background: #2ed573; }
+  .se-btn-blue { background: #1e90ff; }
+  .se-tab-bar {
+    display: flex; gap: 8px; width: 100%; max-width: 420px; margin-bottom: 15px; overflow-x: auto;
+  }
+  .se-tab-btn {
+    flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #232d42;
+    background: #141b2d; color: #a4b0be; font-size: 12px; cursor: pointer; text-align: center; white-space: nowrap;
+  }
+  .se-tab-btn.active { background: #ff385c; color: #fff; }
+  .se-tourney-item {
+    background: #141b2d; border: 1px solid #232d42; border-radius: 10px;
+    padding: 14px; margin-bottom: 12px; width: 100%; max-width: 420px; box-sizing: border-box;
+  }
+  .se-badge {
+    background: #ff385c22; color: #ff385c; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: bold;
+  }
+</style>
+
+<!-- 1. AUTHENTICATION OVERLAY (Mobile + OTP + Unique Referral) -->
+<div id="se-auth-modal" class="se-overlay" style="display: none;">
+  <div class="se-card" style="text-align: center;">
+    <h2 style="margin: 0 0 10px; color: #fff;">DIVINE OF PSYCHO</h2>
+    <p style="color: #a4b0be; font-size: 13px; margin-bottom: 20px;">Apna mobile number daal kar account banayein</p>
+    
+    <div id="se-step-phone">
+      <input type="tel" id="se-login-phone" class="se-input" placeholder="10 Digit Mobile Number" maxlength="10">
+      <input type="text" id="se-login-ref" class="se-input" placeholder="Refer Code (Optional)">
+      <button class="se-btn" onclick="seSendOtp()">Get OTP</button>
+    </div>
+
+    <div id="se-step-otp" style="display: none;">
+      <p style="color: #2ed573; font-size: 13px;">OTP number par bhej diya gaya hai (Auto/Demo: 123456)</p>
+      <input type="number" id="se-login-otp" class="se-input" placeholder="Enter 6-digit OTP">
+      <button class="se-btn se-btn-green" onclick="seVerifyOtp()">Verify & Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. WORKER / ADMIN ACCESS SECRET OVERLAY -->
+<div id="se-staff-modal" class="se-overlay" style="display: none;">
+  <div class="se-card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="margin:0; color:#ff385c;">Staff / Worker Panel</h3>
+      <span onclick="seToggleStaffModal(false)" style="cursor:pointer; color:#a4b0be; font-size:18px;">&times;</span>
+    </div>
+    <div style="margin-top: 15px;">
+      <p style="font-size:12px; color:#a4b0be;">Update Room ID & Pass for Tournaments:</p>
+      <select id="se-staff-tourney-select" class="se-input"></select>
+      <input type="text" id="se-staff-room-id" class="se-input" placeholder="Room ID">
+      <input type="text" id="se-staff-room-pass" class="se-input" placeholder="Room Password">
+      <button class="se-btn se-btn-blue" onclick="seSaveRoomDetails()">Set Room ID & Pass</button>
+    </div>
+    
+    <hr style="border: 0.5px solid #232d42; margin: 15px 0;">
+    <h4 style="margin:0 0 10px; color:#a4b0be; font-size:13px;">Pending Add Cash Requests</h4>
+    <div id="se-pending-payments-list" style="max-height: 140px; overflow-y: auto; font-size: 12px;"></div>
+  </div>
+</div>
+
+<script>
+// --- CORE STORAGE SETUP ---
+const SE_CONFIG = {
+  ADMIN_UPI: "x1prince@fam",
+  ADMIN_CHAT_ID: "6947007853",
+  BOT_TOKEN: "8032729173:AAFIsUCFfd3YKRfJbEc15_tkZQ_jtEijI8",
+  STAFF_KEY: "admin123" // Staff/Worker password to manage room IDs
+};
+
+let seUser = JSON.parse(localStorage.getItem('se_user') || 'null');
+let seTournaments = JSON.parse(localStorage.getItem('se_tournaments') || 'null');
+let sePendingPayments = JSON.parse(localStorage.getItem('se_pending_pay') || '[]');
+
+// Default Tournaments Data
+if (!seTournaments) {
+  seTournaments = [
+    { id: 1, title: "FF MAX FULL MAP", type: "FULL MAP", map: "Bermuda", entry: 10, prize: 200, maxSlots: 48, joined: 38, timeOffsetMin: 15, roomId: "", roomPass: "" },
+    { id: 2, title: "CS 1V1 DUEL", type: "SOLO 1V1", map: "Custom Room", entry: 25, prize: 40, maxSlots: 2, joined: 1, timeOffsetMin: 25, roomId: "", roomPass: "" },
+    { id: 3, title: "LONE WOLF 1V1", type: "SOLO 1V1", map: "Iron Cage", entry: 25, prize: 40, maxSlots: 2, joined: 1, timeOffsetMin: 40, roomId: "", roomPass: "" },
+    { id: 4, title: "CS 2V2 DUO", type: "DUO 2V2", map: "Warehouse", entry: 30, prize: 50, maxSlots: 4, joined: 2, timeOffsetMin: 55, roomId: "", roomPass: "" },
+    { id: 5, title: "CS 4V4 CLASH SQUAD", type: "FULL MAP", map: "Bermuda", entry: 40, prize: 240, maxSlots: 8, joined: 4, timeOffsetMin: 60, roomId: "", roomPass: "" }
+  ];
+  localStorage.setItem('se_tournaments', JSON.stringify(seTournaments));
+}
+
+// Check Login on Start
+window.addEventListener('DOMContentLoaded', () => {
+  if (!seUser) {
+    document.getElementById('se-auth-modal').style.display = 'flex';
+  } else {
+    seApplyUserUI();
+  }
+  seRenderWorkerSelect();
+  seRenderPendingPayments();
+});
+
+// --- AUTH / REFERRAL LOGIC ---
+function seSendOtp() {
+  const phone = document.getElementById('se-login-phone').value.trim();
+  if (phone.length !== 10) {
+    alert("Kripya sahi 10 digit mobile number dalein!");
+    return;
+  }
+  document.getElementById('se-step-phone').style.display = 'none';
+  document.getElementById('se-step-otp').style.display = 'block';
+}
+
+function seVerifyOtp() {
+  const otp = document.getElementById('se-login-otp').value.trim();
+  const phone = document.getElementById('se-login-phone').value.trim();
+  const refInput = document.getElementById('se-login-ref').value.trim().toUpperCase();
+
+  if (otp !== "123456" && otp.length !== 6) {
+    alert("Galat OTP! Demo verification ke liye 123456 dalein.");
+    return;
+  }
+
+  // Generate Unique Refer Code for User (e.g., SURI + last 4 digits)
+  const myRefCode = "SURI" + phone.substring(6, 10);
+  let bonus = 0;
+
+  // Referral verification logic
+  if (refInput && refInput !== myRefCode) {
+    bonus = 10; // Joined user gets bonus
+    alert("Referral Code Applied! ₹10 Signup Bonus mila.");
+  }
+
+  seUser = {
+    phone: phone,
+    referCode: myRefCode,
+    balance: bonus,
+    winnings: 0,
+    joinedMatches: []
+  };
+
+  localStorage.setItem('se_user', JSON.stringify(seUser));
+  document.getElementById('se-auth-modal').style.display = 'none';
+  seApplyUserUI();
+}
+
+function seApplyUserUI() {
+  if (!seUser) return;
+  // Update Wallet text if exists
+  const walletBadges = document.querySelectorAll('.wallet-balance, #wallet-balance, .header-balance');
+  walletBadges.forEach(el => el.innerText = "₹" + seUser.balance);
+  
+  // Update Refer page code
+  const refCodeEl = document.querySelector('.refer-code, #user-refer-code');
+  if (refCodeEl) refCodeEl.innerText = seUser.referCode;
+}
+
+// --- SECURE UTR & WALLET SYSTEM ---
+function seSubmitDeposit(amount, utr) {
+  if (!utr || utr.length < 12) {
+    alert("Kripya valid 12-digit UTR/Reference number dalein!");
+    return;
+  }
+  
+  // Check if UTR already used
+  let usedUTRs = JSON.parse(localStorage.getItem('se_used_utrs') || '[]');
+  if (usedUTRs.includes(utr)) {
+    alert("Yeh UTR number pehle se use kiya ja chuka hai!");
+    return;
+  }
+
+  // Add to Pending approval
+  sePendingPayments.push({
+    phone: seUser.phone,
+    amount: amount,
+    utr: utr,
+    timestamp: new Date().toLocaleTimeString()
+  });
+  localStorage.setItem('se_pending_pay', JSON.stringify(sePendingPayments));
+  
+  alert("Payment verification pending! UTR approval ke baad paise wallet me add ho jayenge.");
+  seRenderPendingPayments();
+}
+
+// --- WORKER / ADMIN LOGIC ---
+function seToggleStaffModal(show) {
+  const modal = document.getElementById('se-staff-modal');
+  if (show) {
+    const key = prompt("Staff / Worker Access Key dalein:");
+    if (key === SE_CONFIG.STAFF_KEY) {
+      modal.style.display = 'flex';
+      seRenderWorkerSelect();
+      seRenderPendingPayments();
+    } else {
+      alert("Galat password!");
+    }
+  } else {
+    modal.style.display = 'none';
+  }
+}
+
+function seRenderWorkerSelect() {
+  const sel = document.getElementById('se-staff-tourney-select');
+  if (!sel) return;
+  sel.innerHTML = "";
+  seTournaments.forEach(t => {
+    let opt = document.createElement('option');
+    opt.value = t.id;
+    opt.innerText = t.title + " (ID: " + t.id + ")";
+    sel.appendChild(opt);
+  });
+}
+
+function seSaveRoomDetails() {
+  const tId = parseInt(document.getElementById('se-staff-tourney-select').value);
+  const rId = document.getElementById('se-staff-room-id').value.trim();
+  const rPass = document.getElementById('se-staff-room-pass').value.trim();
+
+  let t = seTournaments.find(x => x.id === tId);
+  if (t) {
+    t.roomId = rId;
+    t.roomPass = rPass;
+    localStorage.setItem('se_tournaments', JSON.stringify(seTournaments));
+    alert("Match ID " + tId + " ke liye Room ID & Password live ho gaya!");
+    document.getElementById('se-staff-room-id').value = '';
+    document.getElementById('se-staff-room-pass').value = '';
+  }
+}
+
+function seRenderPendingPayments() {
+  const list = document.getElementById('se-pending-payments-list');
+  if (!list) return;
+  list.innerHTML = "";
+  if (sePendingPayments.length === 0) {
+    list.innerHTML = "<p style='color:#a4b0be;'>Koi pending request nahi hai.</p>";
+    return;
+  }
+  sePendingPayments.forEach((p, index) => {
+    let item = document.createElement('div');
+    item.style = "background:#0b0f19; padding:8px; border-radius:6px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;";
+    item.innerHTML = `
+      <div><b>₹${p.amount}</b> | UTR: ${p.utr}<br><small style="color:#a4b0be;">${p.phone}</small></div>
+      <button onclick="seApproveDeposit(${index})" style="background:#2ed573; border:none; color:#fff; border-radius:4px; padding:4px 8px; cursor:pointer;">Approve</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function seApproveDeposit(index) {
+  let pay = sePendingPayments[index];
+  if (!pay) return;
+  
+  // Record used UTR
+  let usedUTRs = JSON.parse(localStorage.getItem('se_used_utrs') || '[]');
+  usedUTRs.push(pay.utr);
+  localStorage.setItem('se_used_utrs', JSON.stringify(usedUTRs));
+
+  // Add balance to user
+  if (seUser && seUser.phone === pay.phone) {
+    seUser.balance += parseFloat(pay.amount);
+    localStorage.setItem('se_user', JSON.stringify(seUser));
+    seApplyUserUI();
+  }
+
+  sePendingPayments.splice(index, 1);
+  localStorage.setItem('se_pending_pay', JSON.stringify(sePendingPayments));
+  alert("Payment approved!");
+  seRenderPendingPayments();
+}
+
+// Hook hidden staff button: App ke top logo par triple click karne se staff panel khulega
+let logoClickCount = 0;
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.brand-logo, .brand-section, header')) {
+    logoClickCount++;
+    if (logoClickCount >= 3) {
+      logoClickCount = 0;
+      seToggleStaffModal(true);
+    }
+    setTimeout(() => { logoClickCount = 0; }, 1500);
+  }
+});
+</script>
+<!-- ================= END SYSTEM ================= -->
