@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>DIVINE OF PSYCHO - SURI ESPORTS TOURNAMENTS</title>
+  <title>DIVINE OF PSYCHO - SURI ESPORTS</title>
   <link rel="icon" type="image/png" href="samurai_logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { background: #070b14; color: #f8fafc; font-family: 'Inter', sans-serif; padding: 24px 16px 60px; }
+    body { background: #070b14; color: #f8fafc; font-family: 'Inter', sans-serif; padding: 20px 14px 60px; }
 
     /* Top Logo & Branding */
     .hero-avatar-wrap { text-align: center; margin-bottom: 12px; }
-    .hero-circle-logo { width: 140px; height: 140px; border-radius: 50%; padding: 4px; background: radial-gradient(circle, rgba(239,68,68,0.4), transparent); border: 2.5px solid #ef4444; margin: 0 auto; box-shadow: 0 0 25px rgba(239, 68, 68, 0.65); display: flex; align-items: center; justify-content: center; }
+    .hero-circle-logo { width: 130px; height: 130px; border-radius: 50%; padding: 4px; background: radial-gradient(circle, rgba(239,68,68,0.4), transparent); border: 2.5px solid #ef4444; margin: 0 auto; box-shadow: 0 0 25px rgba(239, 68, 68, 0.65); display: flex; align-items: center; justify-content: center; }
     .hero-circle-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #000; }
 
     .brand-title { text-align: center; font-size: 22px; font-weight: 800; letter-spacing: 1.5px; color: #ffffff; margin-top: 10px; font-family: 'Rajdhani', sans-serif; }
-    .brand-sub { text-align: center; font-size: 11px; font-weight: 700; color: #f87171; letter-spacing: 1.5px; margin-bottom: 22px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; }
+    .brand-sub { text-align: center; font-size: 11px; font-weight: 700; color: #f87171; letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; }
 
     /* Channels Grid */
     .section-lbl { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px; margin-bottom: 10px; text-transform: uppercase; }
-    .channels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
-    .channel-btn { background: #111827; border: 1px solid #1f293d; border-radius: 10px; padding: 11px; font-size: 12px; font-weight: 600; color: #f1f5f9; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+    .channels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+    .channel-btn { background: #111827; border: 1px solid #1f293d; border-radius: 10px; padding: 11px; font-size: 12px; font-weight: 600; color: #f1f5f9; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; cursor: pointer; }
     .c-wa { color: #22c55e; }
     .c-tg { color: #38bdf8; }
     .c-ig { color: #f43f5e; }
@@ -38,23 +38,27 @@
     .mode-fee { font-size: 18px; font-weight: 800; color: #f43f5e; font-family: 'Rajdhani', sans-serif; }
     .mode-fee-tag { font-size: 10px; color: #94a3b8; font-weight: 500; }
 
-    /* Step 2: UPI Box */
+    /* Step 2: UPI & QR Box */
     .upi-box-card { background: #0c1322; border: 1.5px dashed #0284c7; border-radius: 14px; padding: 18px 14px; text-align: center; margin-bottom: 24px; }
-    .upi-header-title { font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 12px; }
-    .upi-display-pill { background: #050b14; border: 1.5px solid #0284c7; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .upi-header-title { font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 10px; }
+    .upi-display-pill { background: #050b14; border: 1.5px solid #0284c7; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .upi-id-txt { font-size: 14px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; }
     .btn-copy-chip { background: #1e293b; border: 1px solid #334155; color: #cbd5e1; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
-    .btn-pay-direct { width: 100%; background: #00e599; color: #022c22; border: none; padding: 14px; border-radius: 10px; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
+    
+    .qr-container { background: #ffffff; padding: 8px; border-radius: 10px; display: inline-block; margin-bottom: 12px; }
+    .qr-container img { width: 140px; height: 140px; display: block; }
+    .btn-pay-direct { width: 100%; background: #00e599; color: #022c22; border: none; padding: 13px; border-radius: 10px; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
 
     /* Step 3: Registration Form */
     .reg-form-card { background: #0e1526; border: 1px solid #1e293b; border-radius: 14px; padding: 18px 16px; }
     .field-group { margin-bottom: 14px; }
     .field-label { display: block; font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
-    .form-input { width: 100%; background: #070b14; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 14px; color: #f8fafc; font-size: 13px; outline: none; transition: 0.2s; }
+    .form-input { width: 100%; background: #070b14; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 14px; color: #f8fafc; font-size: 13px; outline: none; }
     .form-input:focus { border-color: #f43f5e; }
     .form-input::placeholder { color: #475569; }
 
     .btn-submit-entry { width: 100%; background: #f43f5e; color: #ffffff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; margin-top: 6px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3); }
+    .btn-submit-entry:disabled { opacity: 0.6; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -129,7 +133,7 @@
       </div>
     </div>
 
-    <!-- NEW MODE: CS 4v4 WAR -->
+    <!-- Mode 5 (NEW) -->
     <div class="mode-card" onclick="selectMode(this, 35, 'Clash Squad 4v4 War')">
       <div>
         <div class="mode-title">Clash Squad 4v4 War</div>
@@ -160,10 +164,15 @@
     <div class="upi-header-title">Official Admin UPI ID:</div>
     <div class="upi-display-pill">
       <span class="upi-id-txt" id="adminUpi">x1prince@fam</span>
-      <button class="btn-copy-chip" onclick="navigator.clipboard.writeText('x1prince@fam'); alert('UPI Copied: x1prince@fam')">COPY</button>
+      <button class="btn-copy-chip" onclick="copyUPI()">COPY</button>
     </div>
 
-    <a id="payBtn" href="upi://pay?pa=x1prince@fam&pn=DivineOfPsycho&am=10&cu=INR" class="btn-pay-direct">
+    <!-- Dynamic Dynamic QR -->
+    <div class="qr-container">
+      <img id="upiQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi%3A%2F%2Fpay%3Fpa%3Dx1prince%40fam%26pn%3DDIVINE%20OF%20PSYCHO%26am%3D10%26cu%3DINR" alt="Pay QR">
+    </div>
+
+    <a id="payBtn" href="upi://pay?pa=x1prince@fam&pn=DIVINE%20OF%20PSYCHO&am=10&cu=INR" class="btn-pay-direct">
       ⚡ PAY VIA UPI APPS (GPAY / PHONEPE)
     </a>
   </div>
@@ -177,7 +186,7 @@
     </div>
 
     <div class="field-group">
-      <label class="field-label">Free Fire Uid (Leader / Solo)</label>
+      <label class="field-label">Free Fire UID (Leader / Solo)</label>
       <input type="text" id="regUid" class="form-input" placeholder="e.g. 1982736452">
     </div>
 
@@ -191,10 +200,14 @@
       <input type="text" id="regUtr" class="form-input" placeholder="Enter 12-digit UTR after payment">
     </div>
 
-    <button class="btn-submit-entry" onclick="handleFormSubmit()">CONFIRM & SUBMIT ENTRY</button>
+    <button id="btnSubmit" class="btn-submit-entry" onclick="sendToTelegramBot()">CONFIRM & SUBMIT ENTRY</button>
   </div>
 
   <script>
+    // Exact Telegram Bot Setup
+    const BOT_TOKEN = "7953926514:AAHh9-k5V9i7Tz5q_iY9F51eA_2G-rVq4k4";
+    const CHAT_ID = "7827858503";
+
     let currentFee = 10;
     let currentModeName = "FF MAX Full Map (Solo 48)";
 
@@ -203,29 +216,62 @@
       card.classList.add('selected');
       currentFee = fee;
       currentModeName = name;
-      document.getElementById('payBtn').href = `upi://pay?pa=x1prince@fam&pn=DivineOfPsycho&am=${fee}&cu=INR`;
+      
+      const upiUrl = `upi://pay?pa=x1prince@fam&pn=DIVINE%20OF%20PSYCHO&am=${fee}&cu=INR`;
+      document.getElementById('payBtn').href = upiUrl;
+      document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiUrl)}`;
     }
 
-    function handleFormSubmit() {
-      let name = document.getElementById('regName').value.trim();
-      let uid = document.getElementById('regUid').value.trim();
-      let phone = document.getElementById('regPhone').value.trim();
-      let utr = document.getElementById('regUtr').value.trim();
+    function copyUPI() {
+      navigator.clipboard.writeText("x1prince@fam");
+      alert("Official Admin UPI Copied: x1prince@fam");
+    }
 
-      if(!name || !uid || !phone || !utr) {
-        alert("Kripya saare fields bharein!");
+    function sendToTelegramBot() {
+      const name = document.getElementById('regName').value.trim();
+      const uid = document.getElementById('regUid').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const utr = document.getElementById('regUtr').value.trim();
+      const btn = document.getElementById('btnSubmit');
+
+      if (!name || !uid || !phone || !utr) {
+        alert("Kripya saare details bharein!");
         return;
       }
-      if(utr.length < 10) {
+      if (utr.length < 10) {
         alert("Kripya valid 12-digit UTR number dalein!");
         return;
       }
 
-      alert(`Registration Successful for ${currentModeName}!\nAdmin will verify UTR: ${utr} and send Room ID & Pass to ${phone}.`);
-      document.getElementById('regName').value = '';
-      document.getElementById('regUid').value = '';
-      document.getElementById('regPhone').value = '';
-      document.getElementById('regUtr').value = '';
+      btn.disabled = true;
+      btn.innerText = "VERIFYING & SUBMITTING...";
+
+      const message = `⚔️ NEW TOURNAMENT ENTRY ⚔️\n\n` +
+                      `🎮 Mode: ${currentModeName}\n` +
+                      `💰 Entry Fee: ₹${currentFee}\n` +
+                      `👤 Name: ${name}\n` +
+                      `🆔 FF UID: ${uid}\n` +
+                      `📞 WhatsApp: ${phone}\n` +
+                      `🧾 UTR Ref: ${utr}\n` +
+                      `⏰ Time: ${new Date().toLocaleTimeString()}`;
+
+      const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+      fetch(telegramUrl)
+        .then(response => {
+          btn.disabled = false;
+          btn.innerText = "CONFIRM & SUBMIT ENTRY";
+          alert(`🎉 Registration Successful!\n\nAapki entry Admin Bot par bhej di gayi hai.\nUTR: ${utr} verify hote hi Room ID WhatsApp par bhej di jayegi.`);
+          document.getElementById('regName').value = '';
+          document.getElementById('regUid').value = '';
+          document.getElementById('regPhone').value = '';
+          document.getElementById('regUtr').value = '';
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerText = "CONFIRM & SUBMIT ENTRY";
+          alert("Registration details submit ho gayi hain!");
+        });
     }
   </script>
 </body>
