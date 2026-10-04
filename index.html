@@ -38,19 +38,28 @@
     .mode-fee { font-size: 18px; font-weight: 800; color: #f43f5e; font-family: 'Rajdhani', sans-serif; }
     .mode-fee-tag { font-size: 10px; color: #94a3b8; font-weight: 500; }
 
-    /* Step 2 UPI Payment Container */
-    .upi-box-card { background: #0c1322; border: 1.5px dashed #0284c7; border-radius: 14px; padding: 18px 14px; text-align: center; }
+    /* Step 2: UPI Box */
+    .upi-box-card { background: #0c1322; border: 1.5px dashed #0284c7; border-radius: 14px; padding: 18px 14px; text-align: center; margin-bottom: 24px; }
     .upi-header-title { font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 12px; }
     .upi-display-pill { background: #050b14; border: 1.5px solid #0284c7; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .upi-id-txt { font-size: 14px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; }
     .btn-copy-chip { background: #1e293b; border: 1px solid #334155; color: #cbd5e1; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
-
     .btn-pay-direct { width: 100%; background: #00e599; color: #022c22; border: none; padding: 14px; border-radius: 10px; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
+
+    /* Step 3: Registration Form */
+    .reg-form-card { background: #0e1526; border: 1px solid #1e293b; border-radius: 14px; padding: 18px 16px; }
+    .field-group { margin-bottom: 14px; }
+    .field-label { display: block; font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+    .form-input { width: 100%; background: #070b14; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 14px; color: #f8fafc; font-size: 13px; outline: none; transition: 0.2s; }
+    .form-input:focus { border-color: #f43f5e; }
+    .form-input::placeholder { color: #475569; }
+
+    .btn-submit-entry { width: 100%; background: #f43f5e; color: #ffffff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; margin-top: 6px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3); }
   </style>
 </head>
 <body>
 
-  <!-- Circle Samurai Logo -->
+  <!-- Samurai Avatar -->
   <div class="hero-avatar-wrap">
     <div class="hero-circle-logo">
       <img src="samurai_logo.png" alt="Suri">
@@ -58,7 +67,7 @@
   </div>
 
   <div class="brand-title">DIVINE OF PSYCHO</div>
-  <div class="brand-sub">SURI ESPORTS TOURNAMENTS 🗡️️</div>
+  <div class="brand-sub">SURI ESPORTS TOURNAMENTS 🗡</div>
 
   <!-- Official Admin Channels -->
   <div class="section-lbl">OFFICIAL ADMIN CHANNELS</div>
@@ -72,7 +81,7 @@
   <!-- Step 1: Choose Game Mode -->
   <div class="section-lbl">STEP 1: CHOOSE GAME MODE</div>
   <div class="modes-list">
-    <div class="mode-card selected" onclick="selectMode(this, 10)">
+    <div class="mode-card selected" onclick="selectMode(this, 10, 'FF MAX Full Map (Solo 48)')">
       <div>
         <div class="mode-title">FF MAX Full Map (Solo 48)</div>
         <div class="mode-detail">1st Prize: ₹200 (Pool ₹380)</div>
@@ -83,7 +92,7 @@
       </div>
     </div>
 
-    <div class="mode-card" onclick="selectMode(this, 25)">
+    <div class="mode-card" onclick="selectMode(this, 25, 'Clash Squad 1v1 Duel')">
       <div>
         <div class="mode-title">Clash Squad 1v1 Duel</div>
         <div class="mode-detail">Winner: ₹40 (Instant)</div>
@@ -94,7 +103,7 @@
       </div>
     </div>
 
-    <div class="mode-card" onclick="selectMode(this, 25)">
+    <div class="mode-card" onclick="selectMode(this, 25, 'Lone Wolf 1v1 Deathmatch')">
       <div>
         <div class="mode-title">Lone Wolf 1v1 Deathmatch</div>
         <div class="mode-detail">Winner: ₹40 (Instant)</div>
@@ -105,7 +114,7 @@
       </div>
     </div>
 
-    <div class="mode-card" onclick="selectMode(this, 30)">
+    <div class="mode-card" onclick="selectMode(this, 30, 'CS 2v2 Duo Showdown')">
       <div>
         <div class="mode-title">CS 2v2 Duo Showdown</div>
         <div class="mode-detail yellow">Winning Team: ₹50</div>
@@ -116,7 +125,7 @@
       </div>
     </div>
 
-    <div class="mode-card" onclick="selectMode(this, 40)">
+    <div class="mode-card" onclick="selectMode(this, 40, 'FF Max Squad (12 Squads)')">
       <div>
         <div class="mode-title">FF Max Squad (12 Squads)</div>
         <div class="mode-detail">1st: ₹240 | 2nd: ₹120</div>
@@ -142,11 +151,64 @@
     </a>
   </div>
 
+  <!-- Step 3: Registration Form -->
+  <div class="section-lbl">STEP 3: REGISTRATION FORM</div>
+  <div class="reg-form-card">
+    <div class="field-group">
+      <label class="field-label">Team Name / Player Name</label>
+      <input type="text" id="regName" class="form-input" placeholder="Enter name">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Free Fire Uid (Leader / Solo)</label>
+      <input type="text" id="regUid" class="form-input" placeholder="e.g. 1982736452">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">WhatsApp Number (For Room ID & Pass)</label>
+      <input type="tel" id="regPhone" class="form-input" placeholder="Enter 10-digit WhatsApp number">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">UPI Transaction / UTR Ref Number</label>
+      <input type="text" id="regUtr" class="form-input" placeholder="Enter 12-digit UTR after payment">
+    </div>
+
+    <button class="btn-submit-entry" onclick="handleFormSubmit()">CONFIRM & SUBMIT ENTRY</button>
+  </div>
+
   <script>
-    function selectMode(el, amt) {
+    let currentFee = 10;
+    let currentModeName = "FF MAX Full Map (Solo 48)";
+
+    function selectMode(card, fee, name) {
       document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      document.getElementById('payBtn').href = `upi://pay?pa=x1prince@fam&pn=DivineOfPsycho&am=${amt}&cu=INR`;
+      card.classList.add('selected');
+      currentFee = fee;
+      currentModeName = name;
+      document.getElementById('payBtn').href = `upi://pay?pa=x1prince@fam&pn=DivineOfPsycho&am=${fee}&cu=INR`;
+    }
+
+    function handleFormSubmit() {
+      let name = document.getElementById('regName').value.trim();
+      let uid = document.getElementById('regUid').value.trim();
+      let phone = document.getElementById('regPhone').value.trim();
+      let utr = document.getElementById('regUtr').value.trim();
+
+      if(!name || !uid || !phone || !utr) {
+        alert("Kripya saare fields bharein!");
+        return;
+      }
+      if(utr.length < 10) {
+        alert("Kripya valid 12-digit UTR number dalein!");
+        return;
+      }
+
+      alert(`Registration Successful for ${currentModeName}!\nAdmin will verify UTR: ${utr} and send Room ID & Pass to ${phone}.`);
+      document.getElementById('regName').value = '';
+      document.getElementById('regUid').value = '';
+      document.getElementById('regPhone').value = '';
+      document.getElementById('regUtr').value = '';
     }
   </script>
 </body>
