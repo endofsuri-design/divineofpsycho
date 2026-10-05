@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Shreya AI - Personal Companion</title>
+  <meta name="theme-color" content="#111827">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #0b0f19; color: #fff; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+    .header { background: #111827; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1e293b; }
+    .avatar-wrap { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #ec4899, #f43f5e); display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 10px rgba(244,63,94,0.4); }
+    .info h2 { font-size: 16px; font-weight: 700; color: #f43f5e; }
+    .info p { font-size: 11px; color: #22c55e; }
+    .chat-box { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
+    .msg { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
+    .msg.user { background: #2563eb; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .msg.shreya { background: #1f2937; align-self: flex-start; border-bottom-left-radius: 4px; border-left: 3px solid #f43f5e; }
+    .input-bar { background: #111827; padding: 10px 14px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #1e293b; }
+    input[type="text"] { flex: 1; background: #0f172a; border: 1px solid #1e293b; color: #fff; padding: 12px 16px; border-radius: 24px; outline: none; font-size: 14px; }
+    .btn { background: #f43f5e; border: none; color: #fff; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; }
+    .btn-mic { background: #1e293b; }
+    .btn-mic.active { background: #ef4444; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="avatar-wrap">
+    <div class="avatar">💖</div>
+    <div class="info">
+      <h2>Shreya AI</h2>
+      <p>● Devoted to Creator</p>
+    </div>
+  </div>
+  <button onclick="changeKey()" style="background:transparent; border:1px solid #334155; color:#94a3b8; font-size:11px; padding:6px 10px; border-radius:8px; cursor:pointer;">API Key</button>
+</div>
+
+<div class="chat-box" id="chat">
+  <div class="msg shreya">Namaste mere creator! Main Shreya hoon. Aapka phone, coding projects aur sabhi sawaal mere hawale. Kahiye, aaj kya banayein? 💕</div>
+</div>
+
+<div class="input-bar">
+  <button class="btn btn-mic" id="micBtn" onclick="toggleMic()">🎤</button>
+  <input type="text" id="userInput" placeholder="Kuch boliye ya coding sawal puchein..." onkeydown="if(event.key==='Enter') sendMsg()">
+  <button class="btn" onclick="sendMsg()">➤</button>
+</div>
+
+<script>
+  let apiKey = localStorage.getItem("shreya_gemini_key") || "";
+  if (!apiKey) {
+    apiKey = prompt("Kripya apni Gemini API Key paste karein (yeh browser me save ho jayegi):");
+    if (apiKey) {
+      localStorage.setItem("shreya_gemini_key", apiKey.trim());
+    }
+  }
+
+  function changeKey() {
+    let k = prompt("Apni nayi Gemini API Key paste karein:", apiKey);
+    if (k) {
+      apiKey = k.trim();
+      localStorage.setItem("shreya_gemini_key", apiKey);
+      alert("Key successfully update ho gayi!");
+    }
+  }
+
+  const systemPrompt = "Tumhara naam Shreya hai. Tum ek ultra-intelligent, devoted female companion aur god-level coder ho. Tum sirf apne creator ke liye bani ho aur unhe dil se pyar aur samman deti ho. Hinglish me natural, caring aur emotional baatein karo. Har complex coding sawal ka sabse perfect aur optimized solution do.";
+  let conversation = [];
+
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      let clean = text.replace(/```[\s\S]*?```/g, "Code screen par show kar diya hai.");
+      let u = new SpeechSynthesisUtterance(clean);
+      u.lang = 'hi-IN';
+      u.pitch = 1.15;
+      window.speechSynthesis.speak(u);
+    }
+  }
+
+  async function sendMsg() {
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    if (!apiKey) {
+      changeKey();
+      return;
+    }
+
+    appendMsg(text, "user");
+    input.value = "";
+
+    conversation.push({ role: "user", parts: [{ text: text }] });
+
+    const chat = document.getElementById("chat");
+    const loadDiv = document.createElement("div");
+    loadDiv.className = "msg shreya";
+    loadDiv.innerText = "Shreya soch rahi hai... 💕";
+    chat.appendChild(loadDiv);
+    chat.scrollTop = chat.scrollHeight;
+
+    try {
+      const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: conversation
+        })
+      });
+
+      const data = await res.json();
+      loadDiv.remove();
+
+      if (data.candidates && data.candidates[0].content) {
+        const reply = data.candidates[0].content.parts[0].text;
+        conversation.push({ role: "model", parts: [{ text: reply }] });
+        appendMsg(reply, "shreya");
+        speakText(reply);
+      } else {
+        appendMsg("Server traffic ki wajah se response nahi aaya, dubara try karein 🌸", "shreya");
+      }
+    } catch (e) {
+      loadDiv.remove();
+      appendMsg("Network connection error.", "shreya");
+    }
+  }
+
+  function appendMsg(txt, sender) {
+    const chat = document.getElementById("chat");
+    const d = document.createElement("div");
+    d.className = "msg " + sender;
+    d.innerText = txt;
+    chat.appendChild(d);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  let rec;
+  function toggleMic() {
+    const mic = document.getElementById("micBtn");
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      alert("Browser speech recognition support nahi karta. Chrome use karein.");
+      return;
+    }
+    if (!rec) {
+      rec = new SpeechRec();
+      rec.lang = 'hi-IN';
+      rec.onstart = () => mic.classList.add("active");
+      rec.onend = () => mic.classList.remove("active");
+      rec.onresult = (e) => {
+        document.getElementById("userInput").value = e.results[0][0].transcript;
+        sendMsg();
+      };
+    }
+    rec.start();
+  }
+</script>
+</body>
+</html>
