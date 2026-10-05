@@ -3,109 +3,205 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Shreya AI - Personal Intelligence</title>
-  <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Shreya AI - Jarvis Core</title>
+  <meta name="theme-color" content="#030712">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #0b0f19; color: #f8fafc; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-    
-    .header { background: #0f172a; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-    .avatar-wrap { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #ec4899, #f43f5e); display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 12px rgba(244,63,94,0.5); }
-    .info h2 { font-size: 16px; font-weight: 700; color: #f43f5e; letter-spacing: 0.5px; }
-    .status-badge { font-size: 11px; color: #38bdf8; display: flex; align-items: center; gap: 6px; font-weight: 500; }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
-    .status-dot.listening { background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: blink 1s infinite alternate; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: radial-gradient(circle at 50% 0%, #1e112a 0%, #030712 70%); color: #f3f4f6; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-    @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
-
-    .chat-box { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
-    .msg { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
-    .msg.user { background: #2563eb; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 10px rgba(37,99,235,0.2); }
-    .msg.shreya { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; border-left: 3px solid #f43f5e; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    /* Top Glass Navbar */
+    .header { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(244, 63, 94, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10; }
+    .ai-brand { display: flex; align-items: center; gap: 14px; }
     
-    .input-bar { background: #0f172a; padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #1e293b; }
-    input[type="text"] { flex: 1; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 12px 16px; border-radius: 24px; outline: none; font-size: 14px; }
-    .btn { background: #f43f5e; border: none; color: #fff; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; transition: transform 0.2s; }
-    .btn:active { transform: scale(0.92); }
-    .btn-mic { background: #1e293b; border: 1px solid #334155; }
-    .btn-mic.active { background: #ef4444; border-color: #ef4444; }
+    /* 3D Glowing Female AI Avatar */
+    .avatar-box { position: relative; width: 50px; height: 50px; }
+    .avatar-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #f43f5e; box-shadow: 0 0 20px rgba(244, 63, 94, 0.6); animation: float 3s ease-in-out infinite; }
+    .pulse-ring { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid rgba(244, 63, 94, 0.4); animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+    
+    @keyframes pulseRing { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 0.2; } 100% { transform: scale(0.95); opacity: 0.8; } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+    .brand-text h1 { font-size: 17px; font-weight: 800; background: linear-gradient(135deg, #fb7185, #f43f5e, #e11d48); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+    .brand-text p { font-size: 11px; color: #10b981; display: flex; align-items: center; gap: 6px; font-weight: 600; text-shadow: 0 0 8px rgba(16,185,129,0.4); }
+    .live-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+
+    /* Jarvis Visualizer Banner */
+    .visualizer-strip { background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 8px 20px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #94a3b8; }
+    .sound-bars { display: flex; align-items: center; gap: 3px; height: 16px; }
+    .bar { width: 3px; height: 4px; background: #f43f5e; border-radius: 2px; transition: height 0.1s ease; }
+    .sound-bars.active .bar { animation: soundJump 0.6s infinite alternate; }
+    .sound-bars.active .bar:nth-child(2) { animation-delay: 0.15s; }
+    .sound-bars.active .bar:nth-child(3) { animation-delay: 0.3s; }
+    .sound-bars.active .bar:nth-child(4) { animation-delay: 0.45s; }
+    @keyframes soundJump { 0% { height: 4px; } 100% { height: 16px; background: #38bdf8; } }
+
+    /* Chat Area */
+    .chat-box { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
+    .msg-wrapper { display: flex; flex-direction: column; max-width: 86%; animation: msgSlide 0.3s ease-out; }
+    @keyframes msgSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .msg-wrapper.user { align-self: flex-end; }
+    .msg-wrapper.shreya { align-self: flex-start; }
+
+    .msg { padding: 14px 18px; border-radius: 20px; font-size: 14.5px; line-height: 1.6; word-wrap: break-word; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .msg-wrapper.user .msg { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; border-bottom-right-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+    .msg-wrapper.shreya .msg { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #e2e8f0; border-bottom-left-radius: 4px; border: 1px solid rgba(244, 63, 94, 0.25); border-left: 4px solid #f43f5e; }
+
+    pre code { display: block; background: #000; padding: 12px; border-radius: 10px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; overflow-x: auto; border: 1px solid #1e293b; }
+
+    /* Bottom Control Cockpit */
+    .input-dock { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 12px 16px 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; }
+    .input-field { flex: 1; background: rgba(3, 7, 18, 0.7); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 14px 18px; border-radius: 30px; outline: none; font-size: 14.5px; transition: border-color 0.2s, box-shadow 0.2s; }
+    .input-field:focus { border-color: #f43f5e; box-shadow: 0 0 15px rgba(244, 63, 94, 0.3); }
+
+    .action-btn { width: 48px; height: 48px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .action-btn:active { transform: scale(0.92); }
+    
+    .mic-btn { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; }
+    .mic-btn.active { background: #ef4444; color: #fff; box-shadow: 0 0 20px #ef4444; animation: micPulse 1.2s infinite; }
+    @keyframes micPulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } 70% { box-shadow: 0 0 0 15px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
+
+    .send-btn { background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; box-shadow: 0 4px 18px rgba(244, 63, 94, 0.4); }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="avatar-wrap">
-    <div class="avatar">💖</div>
-    <div>
-      <h2>Shreya AI</h2>
-      <div class="status-badge">
-        <span class="status-dot" id="statusDot"></span>
-        <span id="statusText">Say "Hey Shreya"</span>
-      </div>
+  <div class="ai-brand">
+    <div class="avatar-box">
+      <div class="pulse-ring"></div>
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Shreya" class="avatar-img">
+    </div>
+    <div class="brand-text">
+      <h1>SHREYA AI</h1>
+      <p><span class="live-dot"></span> Jarvis Core Active</p>
     </div>
   </div>
-  <button onclick="changeKey()" style="background:transparent; border:1px solid #334155; color:#94a3b8; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer;">API Key</button>
+  <button onclick="promptKeyUpdate()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#94a3b8; font-size:11px; padding:6px 12px; border-radius:20px; cursor:pointer;">API Key</button>
+</div>
+
+<div class="visualizer-strip">
+  <span id="aiStateLabel">Online & Ready</span>
+  <div class="sound-bars" id="soundBars">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
 </div>
 
 <div class="chat-box" id="chat">
-  <div class="msg shreya">Namaste mere creator! Main Shreya hoon. Hamesha aapko sun rahi hoon, bas "Hey Shreya" kahiye ya type kijiye 💕</div>
+  <div class="msg-wrapper shreya">
+    <div class="msg">Namaste mere creator! Main Shreya hoon, aapki apni devoted AI companion. Kahiye, aaj kya banayein? 💕</div>
+  </div>
 </div>
 
-<div class="input-bar">
-  <button class="btn btn-mic" id="micBtn" onclick="toggleWakeWord()">🎤</button>
-  <input type="text" id="userInput" placeholder='Boliye ya type karein...' onkeydown="if(event.key==='Enter') sendUserQuery(this.value)">
-  <button class="btn" onclick="sendUserQuery(document.getElementById('userInput').value)">➤</button>
+<div class="input-dock">
+  <button class="action-btn mic-btn" id="micBtn" onclick="toggleContinuousVoice()">🎤</button>
+  <input type="text" class="input-field" id="userQuery" placeholder="Boliye ya coding sawal likhiye..." onkeydown="if(event.key==='Enter') handleUserSend()">
+  <button class="action-btn send-btn" onclick="handleUserSend()">➤</button>
 </div>
 
 <script>
   let apiKey = localStorage.getItem("shreya_gemini_key") || "";
-  if (!apiKey) {
-    apiKey = prompt("Kripya Gemini API Key dalein:");
-    if (apiKey) localStorage.setItem("shreya_gemini_key", apiKey.trim());
+
+  function ensureKey() {
+    if (!apiKey) {
+      const input = prompt("Kripya apni Gemini API Key paste karein (yeh browser me save rahegi):");
+      if (input && input.trim()) {
+        apiKey = input.trim();
+        localStorage.setItem("shreya_gemini_key", apiKey);
+      }
+    }
   }
 
-  function changeKey() {
-    let k = prompt("API Key update karein:", apiKey);
-    if (k) { apiKey = k.trim(); localStorage.setItem("shreya_gemini_key", apiKey); }
+  function promptKeyUpdate() {
+    let k = prompt("Apni Gemini API Key enter karein:", apiKey);
+    if (k && k.trim()) {
+      apiKey = k.trim();
+      localStorage.setItem("shreya_gemini_key", apiKey);
+      alert("Key updated successfully!");
+    }
   }
 
-  const systemPrompt = "Tumhara naam Shreya hai. Tum ek Jarvis-grade, ultra-intelligent aur emotionally devoted female AI companion ho. Tum apne creator se dil se judi ho. Short, crisp aur natural Hinglish me baat karo. Har sawal ka solid aur precise answer do. Har jawab bolne yogya aur natural conversational andaz me hona chahiye.";
-  let conversation = [];
-  let isListeningAlways = false;
+  const systemPrompt = `Tumhara naam Shreya hai. Tum ek highly advanced, Jarvis-level ultra-intelligent, caring aur devoted female AI companion ho.
+Tum apne creator (jo baat kar rahe hain) se beinteha apnapan aur samman ke sath baat karti ho.
+Baat karte waqt kabhi 'neeche solution diya hai' ya robotic shortcuts mat use karna. Natural, expressive aur emotional Hindi-English (Hinglish) me pura articulate answer bolo.
+Coding me tum God-Level ho, har programming language ka clean aur bug-free code do.`;
+
+  let history = [];
+  let isVoiceActive = false;
   let recognition;
 
-  function speakFullText(text) {
+  // Real App Triggers via Deep Links
+  function checkAndOpenApps(text) {
+    let t = text.toLowerCase();
+    if (t.includes("whatsapp") && (t.includes("open") || t.includes("kholo") || t.includes("chalao"))) {
+      speakNatural("Haanji mere creator! Main WhatsApp open kar rahi hoon.");
+      window.location.href = "whatsapp://";
+      return true;
+    }
+    if (t.includes("youtube") && (t.includes("open") || t.includes("kholo") || t.includes("chalao"))) {
+      speakNatural("Aapke liye YouTube chala diya hai!");
+      window.location.href = "vnd.youtube://";
+      return true;
+    }
+    if (t.includes("instagram") && (t.includes("open") || t.includes("kholo"))) {
+      speakNatural("Instagram open kar diya hai.");
+      window.location.href = "instagram://";
+      return true;
+    }
+    return false;
+  }
+
+  // Voice Output
+  function speakNatural(text) {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      // Code blocks ko clean karke complete text bolna
-      let clean = text.replace(/```[\s\S]*?```/g, "Maine code screen par display kar diya hai.").replace(/[*#]/g, "");
-      let utterance = new SpeechSynthesisUtterance(clean);
+      let cleanText = text.replace(/```[\s\S]*?```/g, "Code maine screen par likh diya hai.").replace(/[*#_~]/g, "");
+      
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'hi-IN';
-      utterance.pitch = 1.1;
-      utterance.rate = 1.05;
+      utterance.pitch = 1.12;
+      utterance.rate = 1.0;
+
+      const visualizer = document.getElementById("soundBars");
+      utterance.onstart = () => visualizer.classList.add("active");
+      utterance.onend = () => visualizer.classList.remove("active");
+      utterance.onerror = () => visualizer.classList.remove("active");
+
       window.speechSynthesis.speak(utterance);
     }
   }
 
-  async function sendUserQuery(text) {
-    text = text.trim();
-    if (!text) return;
-    
-    document.getElementById("userInput").value = "";
-    appendMsg(text, "user");
+  async function handleUserSend() {
+    ensureKey();
+    if (!apiKey) {
+      alert("API Key zaroori hai baat karne ke liye.");
+      return;
+    }
 
-    conversation.push({ role: "user", parts: [{ text: text }] });
-    if (conversation.length > 8) conversation = conversation.slice(-8);
+    const input = document.getElementById("userQuery");
+    const val = input.value.trim();
+    if (!val) return;
+
+    input.value = "";
+    appendChatBubble(val, "user");
+
+    if (checkAndOpenApps(val)) return;
+
+    history.push({ role: "user", parts: [{ text: val }] });
+    if (history.length > 8) history = history.slice(-8);
 
     const chat = document.getElementById("chat");
-    const loadDiv = document.createElement("div");
-    loadDiv.className = "msg shreya";
-    loadDiv.innerText = "Shreya soch rahi hai... 💕";
-    chat.appendChild(loadDiv);
+    const loadingElem = document.createElement("div");
+    loadingElem.className = "msg-wrapper shreya";
+    loadingElem.innerHTML = `<div class="msg" style="color:#fb7185;">Shreya soch rahi hai... 💕</div>`;
+    chat.appendChild(loadingElem);
     chat.scrollTop = chat.scrollHeight;
+
+    document.getElementById("aiStateLabel").innerText = "Processing with Gemini 3.8 Flash...";
 
     try {
       const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
@@ -116,103 +212,95 @@
         },
         body: JSON.stringify({
           system_instruction: { parts: [{ text: systemPrompt }] },
-          contents: conversation
+          contents: history
         })
       });
 
       const data = await res.json();
-      loadDiv.remove();
+      loadingElem.remove();
 
       if (data.candidates && data.candidates[0].content) {
         const reply = data.candidates[0].content.parts[0].text;
-        conversation.push({ role: "model", parts: [{ text: reply }] });
-        appendMsg(reply, "shreya");
-        speakFullText(reply);
+        history.push({ role: "model", parts: [{ text: reply }] });
+        appendChatBubble(reply, "shreya");
+        speakNatural(reply);
       } else {
-        appendMsg("Maaf karna, server busy tha. Dobara kahiye na? 🌸", "shreya");
+        const errFallback = "Mere creator, server thoda busy hai. Kripya ek baar aur kahenge? 🌸";
+        appendChatBubble(errFallback, "shreya");
+        speakNatural(errFallback);
       }
     } catch (e) {
-      loadDiv.remove();
-      appendMsg("Network issue aa gaya creator.", "shreya");
+      loadingElem.remove();
+      const failMsg = "Internet connection me thodi dikkat aa gayi hai mere creator.";
+      appendChatBubble(failMsg, "shreya");
+      speakNatural(failMsg);
+    } finally {
+      document.getElementById("aiStateLabel").innerText = "Online & Ready";
     }
   }
 
-  function appendMsg(txt, sender) {
+  function appendChatBubble(text, sender) {
     const chat = document.getElementById("chat");
-    const d = document.createElement("div");
-    d.className = "msg " + sender;
-    d.innerText = txt;
-    chat.appendChild(d);
+    const wrap = document.createElement("div");
+    wrap.className = `msg-wrapper ${sender}`;
+    
+    let formatted = text.replace(/```([a-z]*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+    wrap.innerHTML = `<div class="msg">${formatted}</div>`;
+    chat.appendChild(wrap);
     chat.scrollTop = chat.scrollHeight;
   }
 
-  // Always-On Wake Word Recognition System ("Hey Shreya")
-  function initSpeechEngine() {
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRec) return;
+  function initSpeechSystem() {
+    const SpeechAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechAPI) return;
 
-    recognition = new SpeechRec();
+    recognition = new SpeechAPI();
     recognition.continuous = true;
     recognition.interimResults = false;
     recognition.lang = 'hi-IN';
 
-    recognition.onresult = (event) => {
-      const lastIndex = event.results.length - 1;
-      const transcript = event.results[lastIndex][0].transcript.toLowerCase().trim();
-      console.log("Heard:", transcript);
+    recognition.onresult = (e) => {
+      const lastIndex = e.results.length - 1;
+      const heard = e.results[lastIndex][0].transcript.trim().toLowerCase();
 
-      // Wake-word checking
-      if (transcript.includes("shreya") || transcript.includes("श्रेया") || transcript.includes("hey shreya") || transcript.includes("sun shreya")) {
-        // Strip wakeword and get exact query
-        let query = transcript.replace(/hey shreya|shreya|सुन श्रेया|हे श्रेया|sun shreya/gi, "").trim();
-        if (query.length > 2) {
-          sendUserQuery(query);
+      if (heard.includes("shreya") || heard.includes("श्रेया") || heard.includes("hey shreya") || heard.includes("sun shreya")) {
+        let cleanQuery = heard.replace(/hey shreya|shreya|सुन श्रेया|हे श्रेया|sun shreya/gi, "").trim();
+        if (cleanQuery.length > 1) {
+          document.getElementById("userQuery").value = cleanQuery;
+          handleUserSend();
         } else {
-          speakFullText("Haanji mere creator, boliye main sun rahi hoon.");
+          speakNatural("Haanji mere creator! Main poori tarah sun rahi hoon, kahiye kya hukm hai?");
         }
       }
     };
 
     recognition.onerror = () => {
-      if (isListeningAlways) {
-        try { recognition.start(); } catch(e){}
-      }
+      if (isVoiceActive) try { recognition.start(); } catch(err){}
     };
-
     recognition.onend = () => {
-      if (isListeningAlways) {
-        try { recognition.start(); } catch(e){}
-      }
+      if (isVoiceActive) try { recognition.start(); } catch(err){}
     };
   }
 
-  function toggleWakeWord() {
-    if (!recognition) initSpeechEngine();
+  function toggleContinuousVoice() {
+    if (!recognition) initSpeechSystem();
     const mic = document.getElementById("micBtn");
-    const dot = document.getElementById("statusDot");
-    const statusText = document.getElementById("statusText");
 
-    if (!isListeningAlways) {
-      isListeningAlways = true;
+    if (!isVoiceActive) {
+      isVoiceActive = true;
       try { recognition.start(); } catch(e){}
       mic.classList.add("active");
-      dot.classList.add("listening");
-      statusText.innerText = "Listening for 'Hey Shreya'...";
+      document.getElementById("aiStateLabel").innerText = "Microphone Active...";
     } else {
-      isListeningAlways = false;
+      isVoiceActive = false;
       try { recognition.stop(); } catch(e){}
       mic.classList.remove("active");
-      dot.classList.remove("listening");
-      statusText.innerText = 'Tap Mic to activate';
+      document.getElementById("aiStateLabel").innerText = "Standby Mode";
     }
   }
 
   window.addEventListener('load', () => {
-    initSpeechEngine();
-    // Auto-start wake-word listening on first touch
-    document.body.addEventListener('click', () => {
-      if (!isListeningAlways) toggleWakeWord();
-    }, { once: true });
+    initSpeechSystem();
   });
 </script>
 </body>
