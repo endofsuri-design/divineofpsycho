@@ -1,72 +1,376 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
-  <!-- GOOGLE TOP SEARCH & SEO RANKING TAGS -->
-  <title>Suri Esports | Official Tournament Registration & App</title>
-  <meta name="description" content="Official Suri Esports registration portal by Divine of Psycho. Register your squad for BGMI and Free Fire esports tournaments and download the official app.">
-  <meta name="keywords" content="Suri Esports, Divine of Psycho, suri esports registration, divine of psycho tournament, bgmi tournament registration, free fire esports registration, download divine of psycho app">
-  <meta name="author" content="Divine of Psycho">
-  <meta name="robots" content="index, follow">
-  
-  <!-- Social Media Previews (WhatsApp, Instagram) -->
-  <meta property="og:title" content="Suri Esports - Divine of Psycho Official Portal">
-  <meta property="og:description" content="Official tournament registrations and Android App download.">
-  <meta property="og:url" content="https://endofsuri-design.github.io/divineofpsycho/">
-  <meta property="og:type" content="website">
-
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIVINE OF PSYCHO | Suri Esports Arena</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: radial-gradient(circle at 50% 20%, #170926 0%, #05020c 60%, #010004 100%); color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-
-    .portal-card { background: rgba(13, 7, 26, 0.85); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 28px; padding: 36px 22px; max-width: 440px; width: 100%; box-shadow: 0 15px 50px rgba(0,0,0,0.85); backdrop-filter: blur(20px); }
-    
-    .badge { display: inline-block; background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); padding: 5px 14px; border-radius: 30px; font-size: 11px; font-weight: 800; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1.2px; }
-    
-    h1 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; letter-spacing: 0.5px; }
-    
-    p { font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 28px; padding: 0 10px; }
-
-    .actions-box { display: flex; flex-direction: column; gap: 14px; }
-    
-    .btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px 20px; border-radius: 16px; font-size: 14.5px; font-weight: 800; text-decoration: none; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; border: none; letter-spacing: 0.3px; }
-    .btn:active { transform: scale(0.96); }
-
-    /* Button 1: Registration */
-    .btn-register { background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; box-shadow: 0 6px 25px rgba(244, 63, 94, 0.45); }
-    
-    /* Button 2: APK Download */
-    .btn-download { background: rgba(30, 41, 59, 0.8); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-
-    .footer { margin-top: 28px; font-size: 10.5px; color: #64748b; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.8px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0b0f19;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 16px 12px;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 440px;
+      background: #141b2d;
+      padding: 22px 18px;
+      border-radius: 16px;
+      border: 1px solid #232d42;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .brand-section {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .brand-logo {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 50%;
+      background: #000;
+      padding: 4px;
+      border: 3px solid #ff385c;
+      box-shadow: 0 0 15px rgba(255, 56, 92, 0.4);
+    }
+    .brand-title {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 900;
+      margin-top: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .brand-subtitle {
+      color: #ff385c;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .support-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      background: #1e2640;
+      border: 1px solid #2c3859;
+    }
+    .section-title {
+      color: #a4b0be;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .modes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .mode-card {
+      background: #0b0f19;
+      border: 1px solid #232d42;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .mode-card.active {
+      border-color: #ff385c;
+      background: rgba(255, 56, 92, 0.08);
+    }
+    .mode-info h4 { font-size: 13px; color: #fff; margin-bottom: 2px; }
+    .mode-info p { font-size: 11px; color: #2ed573; font-weight: bold; }
+    .mode-price { text-align: right; }
+    .mode-price .fee { font-size: 14px; font-weight: 900; color: #ff4757; }
+    .mode-price .tag { font-size: 10px; color: #8892b0; }
+    .upi-box {
+      border: 1px dashed #00e5ff;
+      background: rgba(0, 229, 255, 0.05);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .upi-box p { font-size: 12px; color: #a4b0be; margin-bottom: 8px; }
+    .upi-id-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #0b0f19;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #00e5ff;
+      margin-bottom: 10px;
+    }
+    .upi-id-badge span {
+      font-weight: 800;
+      color: #00e5ff;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+    .copy-btn {
+      background: #1e2640;
+      border: none;
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .pay-app-btn {
+      display: inline-block;
+      width: 100%;
+      padding: 10px;
+      background: #2ed573;
+      color: #0b0f19;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .form-group { margin-bottom: 12px; }
+    label {
+      display: block;
+      font-size: 11px;
+      color: #a4b0be;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 8px;
+      border: 1px solid #232d42;
+      background-color: #0b0f19;
+      color: #fff;
+      font-size: 13px;
+    }
+    input:focus { outline: none; border-color: #ff385c; }
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #ff385c, #ff6b81);
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    #statusText {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 12px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-
-<div class="portal-card">
-  <span class="badge">OFFICIAL ESPORTS PORTAL</span>
-  <h1>SURI ESPORTS</h1>
-  <p>Divine of Psycho Competitive Gaming & Tournament Arena. Niche diye gaye link se register karein ya official Android app download karein.</p>
-
-  <div class="actions-box">
-    <!-- 1. Tournament Registration Link -->
-    <a href="suri_app.html" class="btn btn-register">
-      <span>🔥 Tournament Registration Karein</span>
-    </a>
-    
-    <!-- 2. Direct Official APK Download Link -->
-    <a href="divineofpsycho.apk" download class="btn btn-download">
-      <span>📥 Download Official APK</span>
-    </a>
+<div class="container">
+  <div class="brand-section">
+    <img src="https://i.ibb.co/BHfXBCNN/logo.png" alt="DIVINE OF PSYCHO" class="brand-logo">
+    <h1 class="brand-title">DIVINE OF PSYCHO</h1>
+    <p class="brand-subtitle">SURI ESPORTS TOURNAMENTS 🪽</p>
   </div>
-
-  <div class="footer">
-    POWERED BY DIVINE OF PSYCHO • ALL RIGHTS RESERVED
+  <div class="section-title">Official Admin Channels</div>
+  <div class="support-grid">
+    <a href="https://whatsapp.com/channel/0029Vb90behJuyAGTTbZY53z" target="_blank" class="support-btn" style="color: #25d366;">📢 WA Channel</a>
+    <a href="https://t.me/divineofpsycho" target="_blank" class="support-btn" style="color: #0088cc;">✈️ Telegram</a>
+    <a href="https://instagram.com/siuuu_xri" target="_blank" class="support-btn" style="color: #e1306c;">📸 Instagram</a>
+    <a href="https://api.whatsapp.com/send?phone=260953484261&text=Hello%20Admin%20Suri%20Esports" target="_blank" class="support-btn" style="color: #ffbb00;">📞 Admin Chat</a>
   </div>
+  <div class="section-title">Step 1: Choose Game Mode</div>
+  <div class="modes-container">
+    <div class="mode-card active" onclick="selectMode(this, 'FF MAX FULL MAP (Solo)', '10')">
+      <div class="mode-info">
+        <h4>FF MAX Full Map (Solo 48)</h4>
+        <p>1st Prize: ₹200 (Pool ₹380)</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹10</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+    <div class="mode-card" onclick="selectMode(this, 'CS 1V1 DUEL', '25')">
+      <div class="mode-info">
+        <h4>Clash Squad 1v1 Duel</h4>
+        <p>Winner: ₹40 (Instant)</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹25</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+    <div class="mode-card" onclick="selectMode(this, 'LONE WOLF 1V1', '25')">
+      <div class="mode-info">
+        <h4>Lone Wolf 1v1 Deathmatch</h4>
+        <p>Winner: ₹40 (Instant)</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹25</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+    <div class="mode-card" onclick="selectMode(this, 'CS 2V2 DUO', '30')">
+      <div class="mode-info">
+        <h4>CS 2v2 Duo Showdown</h4>
+        <p>Winning Team: ₹50</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹30</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+    <!-- Clash Squad 4v4 War -->
+    <div class="mode-card" onclick="selectMode(this, 35, 'Clash Squad 4v4 War')">
+      <div>
+        <div class="mode-title">Clash Squad 4v4 War</div>
+        <div class="mode-detail"><span style="color:#22c55e;font-size:11px;font-weight:600;">Winning Team: ₹60 (Instant)</span></div>
+      </div>
+      <div class="mode-fee-wrap">
+        <div class="mode-fee"><span style="color:#ef4444;font-size:18px;font-weight:800;font-family:Rajdhani,sans-serif;">₹35</span></div>
+        <div class="mode-fee-tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+    <div class="mode-card" onclick="selectMode(this, 'FF MAX SQUAD', '40')">
+      <div class="mode-info">
+        <h4>FF Max Squad (12 Squads)</h4>
+        <p>1st: ₹240 | 2nd: ₹120</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹40</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-title">Step 2: Scan & Pay Entry Fee</div>
+  <div class="upi-box">
+    <p>Official Admin UPI ID:</p>
+    <div class="upi-id-badge">
+      <span id="upiText">x1prince@fam</span>
+      <button class="copy-btn" type="button" onclick="copyUpi()">COPY</button>
+    </div>
+    <a id="payIntentBtn" href="upi://pay?pa=x1prince@fam&pn=SuriEsports&am=10&cu=INR" class="pay-app-btn">⚡ PAY VIA UPI APPS (GPAY / PHONEPE)</a>
+  </div>
+  <div class="section-title">Step 3: Registration Form</div>
+  <form id="tournamentForm">
+    <input type="hidden" id="selectedMatch" value="FF MAX FULL MAP (Solo)">
+    <input type="hidden" id="selectedFee" value="10">
+    <div class="form-group">
+      <label>Team Name / Player Name</label>
+      <input type="text" id="teamName" required placeholder="Enter name">
+    </div>
+    <div class="form-group">
+      <label>Free Fire UID (Leader / Solo)</label>
+      <input type="text" id="ffUid" required placeholder="e.g. 1982736452">
+    </div>
+    <div class="form-group">
+      <label>WhatsApp Number (For Room ID & Pass)</label>
+      <input type="tel" id="whatsappNum" required placeholder="Enter 10-digit WhatsApp number">
+    </div>
+    <div class="form-group">
+      <label>UPI Transaction / UTR Ref Number</label>
+      <input type="text" id="paymentUtr" required placeholder="Enter 12-digit UTR after payment">
+    </div>
+    <button type="submit" class="submit-btn" id="submitBtn">CONFIRM & SUBMIT ENTRY</button>
+    <div id="statusText"></div>
+  </form>
 </div>
+<script>
+  const BOT_TOKEN = "8832729173:AAFisUCFf3dYKRfjBSEcl5_tkZQ_jtEijI8";
+  const CHAT_ID = "6947007853";
+  const ADMIN_WHATSAPP = "260953484261";
+  const OFFICIAL_UPI = "x1prince@fam";
 
+  function selectMode(card, title, fee) {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    document.getElementById('selectedMatch').value = title;
+    document.getElementById('selectedFee').value = fee;
+    const payBtn = document.getElementById('payIntentBtn');
+    payBtn.href = "upi://pay?pa=" + OFFICIAL_UPI + "&pn=SuriEsports&am=" + fee + "&cu=INR";
+    payBtn.innerText = "⚡ PAY ₹" + fee + " VIA UPI (GPAY / PHONEPE)";
+  }
+
+  function copyUpi() {
+    navigator.clipboard.writeText(OFFICIAL_UPI);
+    alert("Official UPI ID Copied: " + OFFICIAL_UPI);
+  }
+
+  const form = document.getElementById("tournamentForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const statusText = document.getElementById("statusText");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    statusText.style.color = "#00e5ff";
+    statusText.innerText = "Submitting registration...";
+
+    const match = document.getElementById("selectedMatch").value;
+    const fee = document.getElementById("selectedFee").value;
+    const team = document.getElementById("teamName").value.trim();
+    const uid = document.getElementById("ffUid").value.trim();
+    const phone = document.getElementById("whatsappNum").value.trim();
+    const utr = document.getElementById("paymentUtr").value.trim();
+
+    const telegramMsg = "🎮 *NEW SURI ESPORTS ENTRY!*\n\n" +
+                        "*Match:* " + match + "\n" +
+                        "*Entry Fee:* ₹" + fee + "\n" +
+                        "*Player/Team:* " + team + "\n" +
+                        "*FF UID:* " + uid + "\n" +
+                        "*WhatsApp:* " + phone + "\n" +
+                        "*UTR/Ref:* " + utr;
+
+    const waText = "*NEW TOURNAMENT REGISTRATION*%0A%0A" +
+                   "*Match:* " + encodeURIComponent(match) + "%0A" +
+                   "*Entry Fee:* ₹" + encodeURIComponent(fee) + "%0A" +
+                   "*Name:* " + encodeURIComponent(team) + "%0A" +
+                   "*UID:* " + encodeURIComponent(uid) + "%0A" +
+                   "*WhatsApp:* " + encodeURIComponent(phone) + "%0A" +
+                   "*UTR:* " + encodeURIComponent(utr);
+
+    const fallbackWaUrl = "https://api.whatsapp.com/send?phone=" + ADMIN_WHATSAPP + "&text=" + waText;
+
+    fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: CHAT_ID, text: telegramMsg, parse_mode: "Markdown" })
+    })
+    .finally(() => {
+      statusText.style.color = "#2ed573";
+      statusText.innerText = "Entry sent! Opening Admin WhatsApp...";
+      window.location.href = fallbackWaUrl;
+      setTimeout(() => { submitBtn.disabled = false; }, 2000);
+    });
+  });
+</script>
 </body>
 </html>
