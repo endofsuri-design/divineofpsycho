@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMM Services & Growth Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --green: #22c55e;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #1e293b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px 14px 40px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 480px; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 0 16px var(--accent-glow); }
+    .header p { color: var(--accent); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 13px; color: var(--text); margin-bottom: 6px; font-weight: 500; }
+    select, input { width: 100%; background: #0f172a; border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+    .price-box { display: flex; justify-content: space-between; align-items: center; background: rgba(56, 189, 248, 0.08); border: 1px dashed var(--accent); border-radius: 10px; padding: 12px 14px; margin-top: 14px; }
+    .price-text { font-size: 13px; color: var(--muted); }
+    .price-amount { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 800; color: var(--green); }
+    .upi-box { text-align: center; background: #090d16; border-radius: 12px; padding: 14px; border: 1px solid var(--border); margin-bottom: 14px; }
+    .upi-id { font-family: monospace; font-size: 15px; color: var(--accent); font-weight: 600; user-select: all; }
+    .copy-btn { margin-top: 8px; background: #1e293b; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-submit { width: 100%; background: linear-gradient(135deg, #0284c7, #38bdf8); border: none; color: #fff; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 20px var(--accent-glow); }
+    .btn-submit:active { transform: scale(0.98); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>SMM GROW PANEL</h1>
+    <p>⚡ High Quality Social Services</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1. Choose Service</div>
+    <div class="form-group">
+      <label>Category</label>
+      <select id="category" onchange="updateServices()">
+        <option value="ig">Instagram Services</option>
+        <option value="yt">YouTube Services</option>
+        <option value="tg">Telegram Services</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Service Package</label>
+      <select id="service" onchange="calcTotal()"></select>
+    </div>
+    <div class="form-group">
+      <label>Profile / Channel URL</label>
+      <input type="text" id="target_url" placeholder="https://instagram.com/your_handle" required>
+    </div>
+    <div class="form-group">
+      <label>Quantity</label>
+      <input type="number" id="quantity" value="1000" min="100" step="100" oninput="calcTotal()">
+    </div>
+    <div class="price-box">
+      <div class="price-text">Total Payable:</div>
+      <div class="price-amount" id="total_price">₹0</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. Scan & Pay Entry Fee</div>
+    <div class="upi-box">
+      <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">UPI ID:</div>
+      <div class="upi-id" id="upi_text">x1prince@fam</div>
+      <button type="button" class="copy-btn" onclick="navigator.clipboard.writeText('x1prince@fam'); alert('UPI Copied!');">Copy UPI</button>
+    </div>
+    <div class="form-group">
+      <label>Payment UTR / Transaction ID</label>
+      <input type="text" id="utr" placeholder="12-digit UTR number" required>
+    </div>
+    <button class="btn-submit" onclick="submitOrder()">Submit Order</button>
+  </div>
+</div>
+
+<script>
+  const rates = {
+    ig: [
+      { name: "Instagram Followers (Non-Drop)", perK: 85 },
+      { name: "Instagram Real Likes", perK: 25 },
+      { name: "Instagram Reel Views", perK: 15 }
+    ],
+    yt: [
+      { name: "YouTube Subscribers (Guaranteed)", perK: 450 },
+      { name: "YouTube High Retention Views", perK: 120 }
+    ],
+    tg: [
+      { name: "Telegram Channel Members", perK: 95 }
+    ]
+  };
+
+  function updateServices() {
+    const cat = document.getElementById("category").value;
+    const servSelect = document.getElementById("service");
+    servSelect.innerHTML = "";
+    rates[cat].forEach((s, idx) => {
+      let opt = document.createElement("option");
+      opt.value = s.perK;
+      opt.innerText = `${s.name} - ₹${s.perK} per 1K`;
+      servSelect.appendChild(opt);
+    });
+    calcTotal();
+  }
+
+  function calcTotal() {
+    const rate = parseFloat(document.getElementById("service").value) || 0;
+    const qty = parseInt(document.getElementById("quantity").value) || 0;
+    const total = Math.round((rate * qty) / 1000);
+    document.getElementById("total_price").innerText = "₹" + total;
+  }
+
+  function submitOrder() {
+    const url = document.getElementById("target_url").value;
+    const utr = document.getElementById("utr").value;
+    const qty = document.getElementById("quantity").value;
+    const serviceName = document.getElementById("service").selectedOptions[0].text;
+    const total = document.getElementById("total_price").innerText;
+
+    if (!url || !utr) {
+      alert("Please enter target link and UTR number!");
+      return;
+    }
+
+    alert(`Order Placed Successfully!\nService: ${serviceName}\nQty: ${qty}\nAmount: ${total}\nUTR: ${utr}`);
+  }
+
+  updateServices();
+</script>
+</body>
+</html>
