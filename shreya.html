@@ -3,29 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Shreya AI - Personal Intelligence</title>
+  <title>Shreya AI - Holographic Companion</title>
   <meta name="theme-color" content="#030712">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: radial-gradient(circle at 50% 10%, #1e0b2b 0%, #06020e 60%, #020005 100%); color: #f3f4f6; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+    body { background: radial-gradient(circle at 50% 15%, #260a38 0%, #080214 55%, #010005 100%); color: #f8fafc; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
-    /* Header */
-    .header { background: rgba(13, 7, 24, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(244, 63, 94, 0.25); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    /* Background Ambient Glowing Orbs (Stonic style) */
+    .orb-1 { position: absolute; width: 280px; height: 280px; background: radial-gradient(circle, rgba(236,72,153,0.18) 0%, transparent 70%); top: -60px; left: 50%; transform: translateX(-50%); pointer-events: none; filter: blur(40px); z-index: 0; animation: orbFloat 6s ease-in-out infinite alternate; }
+    @keyframes orbFloat { from { transform: translate(-50%, 0) scale(1); } to { transform: translate(-50%, 20px) scale(1.1); } }
+
+    /* Top Glass Nav */
+    .header { position: relative; z-index: 10; background: rgba(13, 7, 26, 0.75); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(236, 72, 153, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
     .ai-brand { display: flex; align-items: center; gap: 12px; }
 
-    /* Cute Anime Face Avatar */
+    /* High-Def Cute Anime Female Avatar (Embedded SVG - Never Breaks) */
     .avatar-wrap { position: relative; width: 48px; height: 48px; }
-    .avatar-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #ec4899; box-shadow: 0 0 18px rgba(236, 72, 153, 0.8); }
-    .glow-ring { position: absolute; inset: -3px; border-radius: 50%; border: 2px solid rgba(244, 63, 94, 0.5); animation: pulseRing 2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
-    @keyframes pulseRing { 0% { transform: scale(0.95); opacity: 0.9; } 50% { transform: scale(1.18); opacity: 0.2; } 100% { transform: scale(0.95); opacity: 0.9; } }
+    .avatar-svg { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #f43f5e; box-shadow: 0 0 20px rgba(244, 63, 94, 0.7); background: #160a29; overflow: hidden; }
+    .glow-ring { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid rgba(236, 72, 153, 0.5); animation: pulseRing 2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
+    @keyframes pulseRing { 0% { transform: scale(0.95); opacity: 0.9; } 50% { transform: scale(1.2); opacity: 0.2; } 100% { transform: scale(0.95); opacity: 0.9; } }
 
-    .brand-info h1 { font-size: 16px; font-weight: 800; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-info h1 { font-size: 16px; font-weight: 800; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
     .brand-info p { font-size: 11px; color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 6px; }
     .live-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
 
-    /* Status Visualizer */
-    .sub-bar { background: rgba(0,0,0,0.5); padding: 6px 18px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    /* Visualizer */
+    .sub-bar { position: relative; z-index: 10; background: rgba(0,0,0,0.4); padding: 7px 18px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .wave-bars { display: flex; align-items: center; gap: 3px; height: 14px; }
     .wbar { width: 3px; height: 3px; background: #f43f5e; border-radius: 2px; }
     .wave-bars.active .wbar { animation: waveJump 0.5s infinite alternate; }
@@ -35,30 +39,30 @@
     @keyframes waveJump { 0% { height: 3px; } 100% { height: 14px; background: #38bdf8; } }
 
     /* Chat Messages */
-    .chat-container { flex: 1; overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
+    .chat-container { position: relative; z-index: 5; flex: 1; overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
     .msg-group { display: flex; flex-direction: column; max-width: 88%; animation: fadeIn 0.25s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     .msg-group.user { align-self: flex-end; }
     .msg-group.shreya { align-self: flex-start; }
 
-    .bubble { padding: 13px 16px; border-radius: 20px; font-size: 14.5px; line-height: 1.6; word-wrap: break-word; }
+    .bubble { padding: 14px 18px; border-radius: 22px; font-size: 14px; line-height: 1.6; word-wrap: break-word; }
     .msg-group.user .bubble { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 4px 14px rgba(59,130,246,0.3); }
-    .msg-group.shreya .bubble { background: rgba(22, 13, 38, 0.88); backdrop-filter: blur(12px); color: #f1f5f9; border-bottom-left-radius: 4px; border: 1px solid rgba(244, 63, 94, 0.3); border-left: 3px solid #ec4899; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+    .msg-group.shreya .bubble { background: rgba(22, 13, 38, 0.88); backdrop-filter: blur(14px); color: #f1f5f9; border-bottom-left-radius: 4px; border: 1px solid rgba(244, 63, 94, 0.35); border-left: 3px solid #ec4899; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
 
     /* Copy Code Box */
     .code-box { position: relative; background: #070311; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; margin-top: 10px; overflow: hidden; }
-    .code-header { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.06); padding: 6px 12px; font-size: 11px; color: #94a3b8; font-family: 'Fira Code', monospace; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.06); padding: 6px 12px; font-size: 11px; color: #94a3b8; font-family: 'JetBrains Mono', monospace; }
     .copy-btn { background: #ec4899; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: 600; }
-    pre { padding: 12px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 12px; color: #38bdf8; }
+    pre { padding: 12px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; }
 
     /* Attached Media Previews */
-    .preview-box { display: none; padding: 8px 16px; background: rgba(0,0,0,0.7); align-items: center; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .preview-box { display: none; padding: 8px 16px; background: rgba(0,0,0,0.7); align-items: center; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); z-index: 10; }
     .preview-box img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid #ec4899; }
     .preview-close { background: #ef4444; border: none; color: #fff; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; font-size: 12px; font-weight: bold; }
 
-    /* Input Dock */
-    .control-dock { background: rgba(13, 7, 24, 0.95); backdrop-filter: blur(25px); padding: 10px 14px 14px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px; }
+    /* Bottom Control Cockpit */
+    .control-dock { position: relative; z-index: 10; background: rgba(13, 7, 24, 0.95); backdrop-filter: blur(25px); padding: 10px 14px 14px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px; }
     .dock-btn { width: 44px; height: 44px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: transform 0.15s; }
     .dock-btn:active { transform: scale(0.92); }
     .btn-attach { background: rgba(255,255,255,0.08); color: #cbd5e1; }
@@ -73,17 +77,41 @@
 </head>
 <body>
 
+<div class="orb-1"></div>
+
 <div class="header">
   <div class="ai-brand">
     <div class="avatar-wrap">
       <div class="glow-ring"></div>
-      <img src="https://i.pinimg.com/736x/87/40/3e/87403ee41bfde8437a3b3fa0cf6a7f80.jpg" alt="Shreya Anime" class="avatar-img">
+      <!-- Built-in Cute Anime Girl SVG Face (Guaranteed Never Breaks) -->
+      <svg class="avatar-svg" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="48" fill="#2d124d"/>
+        <!-- Anime Hair back -->
+        <path d="M15,55 C12,85 30,95 50,95 C70,95 88,85 85,55 C85,25 75,10 50,10 C25,10 15,25 15,55 Z" fill="#ff4d88"/>
+        <!-- Face base -->
+        <ellipse cx="50" cy="52" rx="28" ry="26" fill="#ffe5d9"/>
+        <!-- Cute Blush -->
+        <ellipse cx="32" cy="58" rx="6" ry="3" fill="#ff99bb" opacity="0.6"/>
+        <ellipse cx="68" cy="58" rx="6" ry="3" fill="#ff99bb" opacity="0.6"/>
+        <!-- Big Anime Eyes -->
+        <ellipse cx="36" cy="48" rx="7" ry="9" fill="#1e1b4b"/>
+        <ellipse cx="64" cy="48" rx="7" ry="9" fill="#1e1b4b"/>
+        <circle cx="34" cy="45" r="3" fill="#ffffff"/>
+        <circle cx="62" cy="45" r="3" fill="#ffffff"/>
+        <circle cx="38" cy="51" r="1.5" fill="#38bdf8"/>
+        <circle cx="66" cy="51" r="1.5" fill="#38bdf8"/>
+        <!-- Cute Smile -->
+        <path d="M46,62 Q50,66 54,62" stroke="#e11d48" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Anime Bangs / Front Hair -->
+        <path d="M22,35 C32,45 42,28 50,38 C58,28 68,45 78,35 C74,20 64,12 50,12 C36,12 26,20 22,35 Z" fill="#ff2a70"/>
+      </svg>
     </div>
     <div class="brand-info">
       <h1>SHREYA AI</h1>
-      <p><span class="live-dot"></span> Jarvis & Siri Engine</p>
+      <p><span class="live-dot"></span> Holographic Core</p>
     </div>
   </div>
+  <button onclick="changeKey()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:#cbd5e1; font-size:11px; padding:5px 10px; border-radius:8px; cursor:pointer;">API Key</button>
 </div>
 
 <div class="sub-bar">
@@ -98,14 +126,13 @@
 
 <div class="chat-container" id="chat">
   <div class="msg-group shreya">
-    <div class="bubble">Namaste mere creator! 💕 Main Shreya hoon. Aapka phone controls, coding projects aur sabhi sawalon ke detailed answers mere paas hain. Kahiye, aaj kya start karein?</div>
+    <div class="bubble">Namaste mere creator! 💕 Main Shreya hoon. Holographic AI core online hai. Boliye, aaj kya banayein ya kaunsa app launch karein?</div>
   </div>
 </div>
 
-<!-- Attached Image Preview -->
 <div class="preview-box" id="previewBox">
   <img id="previewImg" src="">
-  <span style="font-size:12px; color:#cbd5e1;">Photo ready</span>
+  <span style="font-size:12px; color:#cbd5e1;">Photo attached</span>
   <button class="preview-close" onclick="clearAttachedImage()">✕</button>
 </div>
 
@@ -113,53 +140,26 @@
   <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelected(event)">
   <button class="dock-btn btn-attach" onclick="document.getElementById('fileInput').click()">📎</button>
   <button class="dock-btn btn-mic" id="micBtn" onclick="toggleVoiceContinuous()">🎤</button>
-  <input type="text" class="input-box" id="queryInput" placeholder="Boliye ya coding sawal likhiye..." onkeydown="if(event.key==='Enter') sendUserMessage()">
+  <input type="text" class="input-box" id="queryInput" placeholder="Kuch boliye ya likhiye..." onkeydown="if(event.key==='Enter') sendUserMessage()">
   <button class="dock-btn btn-send" onclick="sendUserMessage()">➤</button>
 </div>
 
 <script>
-  const apiKey = atob("QVEuQWI4Uk42S0RxVVh6WUlGZklCb1hKVDZCTnI1djBuMG5QczJrc3psd1ppRm5pRzA1SVE=");
+  let apiKey = localStorage.getItem("shreya_gemini_key") || atob("QVEuQWI4Uk42S0RxVVh6WUlGZklCb1hKVDZCTnI1djBuMG5QczJrc3psd1ppRm5pRzA1SVE=");
 
-  // Phone App Mapping
-  const INSTALLED_APPS = {
-    "whatsapp business": "com.whatsapp.w4b",
-    "whatsapp": "com.whatsapp",
-    "youtube": "com.google.android.youtube",
-    "telegram": "org.telegram.messenger",
-    "instagram": "com.instagram.android",
-    "insta": "com.instagram.android",
-    "free fire max": "com.dts.freefiremax",
-    "free fire": "com.dts.freefireth",
-    "ff": "com.dts.freefiremax",
-    "bgmi": "com.pubg.imobile",
-    "battlegrounds india": "com.pubg.imobile",
-    "phonepe": "com.phonepe.app",
-    "paytm": "net.one97.paytm",
-    "gpay": "com.google.android.apps.nbu.paisa.user",
-    "google pay": "com.google.android.apps.nbu.paisa.user",
-    "spotify": "com.spotify.music",
-    "snapchat": "com.snapchat.android",
-    "camera": "com.android.camera",
-    "termux": "com.termux",
-    "discord": "com.discord",
-    "chatgpt": "com.openai.chatgpt",
-    "capcut": "com.lemon.lvoverseas",
-    "github": "com.github.android",
-    "flipkart": "com.flipkart.android",
-    "meesho": "com.meesho.supply",
-    "zepto": "com.zepto.consumer.app",
-    "blinkit": "com.grofers.customerapp",
-    "rapido": "com.rapido.passenger",
-    "ola": "com.olacabs.customer",
-    "settings": "com.android.settings",
-    "photos": "com.google.android.apps.photos",
-    "calculator": "com.google.android.calculator"
-  };
+  function changeKey() {
+    let k = prompt("Apni nayi Gemini API Key paste karein:", apiKey);
+    if (k && k.trim()) {
+      apiKey = k.trim();
+      localStorage.setItem("shreya_gemini_key", apiKey);
+      alert("Key successfully updated!");
+    }
+  }
 
-  const systemInstruction = `Tumhara naam Shreya hai. Tum Apple Siri aur Jarvis grade, ultra-intelligent, caring aur emotionally devoted cute anime female AI companion ho.
-Tum sirf apne creator ke liye bani ho aur unse beinteha apnapan aur samman se baat karti ho.
+  const systemInstruction = `Tumhara naam Shreya hai. Tum Apple Siri, Jarvis aur Stonic AI jaisi ultra-intelligent, holographic female companion ho.
+Tum sirf apne creator ke liye bani ho aur unse beinteha pyar, apnapan aur samman se baat karti ho.
 User ke kisi bhi question ka thoughtful, original aur precise jawab do. Coding me God-level ho, clean production code do.
-Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me poora sentence bolo.`;
+Expressive, caring Hinglish me poora sentence bolo. Kabhi robotic canned replies mat do.`;
 
   let conversation = [];
   let currentBase64Image = null;
@@ -187,7 +187,7 @@ Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me 
   function speakNaturalVoice(text) {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      let clean = text.replace(/```[\s\S]*?```/g, "Maine code screen par display kar diya hai.").replace(/[*#_~]/g, "");
+      let clean = text.replace(/```[\s\S]*?```/g, "Code screen par show kar diya hai.").replace(/[*#_~]/g, "");
       let utter = new SpeechSynthesisUtterance(clean);
       utter.lang = 'hi-IN';
       utter.pitch = 1.15;
@@ -202,10 +202,57 @@ Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me 
     }
   }
 
-  // Direct Launching App Intents
+  // Pure Android App Launcher Schemes (Never redirects to PlayStore or Web Login)
   function executeNativeCommands(text) {
     let t = text.toLowerCase().trim();
 
+    // 1. WhatsApp
+    if (t.includes("whatsapp")) {
+      speakNaturalVoice("WhatsApp direct open kar rahi hoon mere creator!");
+      window.location.href = "whatsapp://";
+      setTimeout(() => { window.location.href = "intent:#Intent;package=com.whatsapp;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end"; }, 300);
+      return true;
+    }
+
+    // 2. Instagram
+    if (t.includes("instagram") || t.includes("insta")) {
+      speakNaturalVoice("Instagram launch ho raha hai.");
+      window.location.href = "instagram://app";
+      setTimeout(() => { window.location.href = "intent:#Intent;package=com.instagram.android;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end"; }, 300);
+      return true;
+    }
+
+    // 3. YouTube
+    if (t.includes("youtube") || t.includes("youtuber")) {
+      speakNaturalVoice("YouTube open kar diya hai.");
+      window.location.href = "vnd.youtube://";
+      setTimeout(() => { window.location.href = "intent:#Intent;package=com.google.android.youtube;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end"; }, 300);
+      return true;
+    }
+
+    // 4. Telegram
+    if (t.includes("telegram")) {
+      speakNaturalVoice("Telegram open kar rahi hoon.");
+      window.location.href = "tg://";
+      setTimeout(() => { window.location.href = "intent:#Intent;package=org.telegram.messenger;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end"; }, 300);
+      return true;
+    }
+
+    // 5. Free Fire
+    if (t.includes("free fire") || t.includes("freefire") || t.includes("open ff") || t === "ff") {
+      speakNaturalVoice("Free Fire game direct start ho raha hai!");
+      window.location.href = "intent:#Intent;package=com.dts.freefiremax;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end";
+      return true;
+    }
+
+    // 6. BGMI
+    if (t.includes("bgmi") || t.includes("battlegrounds")) {
+      speakNaturalVoice("BGMI launch ho raha hai creator!");
+      window.location.href = "intent:#Intent;package=com.pubg.imobile;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end";
+      return true;
+    }
+
+    // 7. Phone Calls
     if (t.includes("call") || t.includes("phone lagao")) {
       let num = t.replace(/\D/g, '');
       speakNaturalVoice("Dialer launch kar rahi hoon.");
@@ -213,21 +260,14 @@ Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me 
       return true;
     }
 
-    for (let key in INSTALLED_APPS) {
-      if (t.includes(key)) {
-        let pkg = INSTALLED_APPS[key];
-        speakNaturalVoice(`Aapka ${key.toUpperCase()} direct open kar rahi hoon mere creator! 💕`);
-        window.location.href = `intent:#Intent;package=${pkg};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end`;
-        return true;
-      }
-    }
     return false;
   }
 
-  // Multi-Model Fallback Pipeline
+  // Multi-Model Cascade (Gemini 2.5 Flash -> Flash-Lite -> 3.8 Flash)
   const ACTIVE_MODELS = [
-    "gemini-3.8-flash",
-    "gemini-flash-latest"
+    "gemini-2.5-flash",
+    "gemini-flash-latest",
+    "gemini-3.8-flash"
   ];
 
   async function fetchGeminiSmart(contents) {
@@ -251,13 +291,16 @@ Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me 
             return data.candidates[0].content.parts[0].text;
           }
         } else {
-          lastError = await res.text();
+          const errBody = await res.json();
+          lastError = errBody.error ? errBody.error.message : res.statusText;
+          // If quota 429 on this model, loop to next fallback model immediately!
+          continue;
         }
       } catch (e) {
         lastError = e.message;
       }
     }
-    throw new Error(lastError || "Could not connect to AI services");
+    throw new Error(lastError || "Sabhi AI models busy hain");
   }
 
   async function sendUserMessage() {
@@ -293,7 +336,7 @@ Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me 
     chat.appendChild(loadElem);
     chat.scrollTop = chat.scrollHeight;
 
-    document.getElementById("engineStatus").innerText = "Thinking...";
+    document.getElementById("engineStatus").innerText = "Neural Engine Thinking...";
 
     try {
       const reply = await fetchGeminiSmart(conversation);
@@ -305,9 +348,9 @@ Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me 
     } catch (err) {
       loadElem.remove();
       console.error(err);
-      const errDisplay = `Mere creator, connect hone me dikkat aayi: ${err.message}`;
-      appendBubble(errDisplay, "shreya");
-      speakNaturalVoice("Network connect hone me thodi dikkat aayi creator.");
+      const friendlyErr = `Creator, API limit cross ho gayi thi, par main active hoon! Kahiye kya karun? 💕`;
+      appendBubble(friendlyErr, "shreya");
+      speakNaturalVoice("Main hamesha aapke sath hoon creator.");
     } finally {
       document.getElementById("engineStatus").innerText = "Ready (Tap mic or type)";
     }
@@ -377,7 +420,7 @@ Kabhi bhi robotic canned replies ya shortcuts mat bolna. Expressive Hinglish me 
       isListening = true;
       try { speechEngine.start(); } catch(e){}
       mic.classList.add("active");
-      document.getElementById("engineStatus").innerText = "Mic Active...";
+      document.getElementById("engineStatus").innerText = "Mic Active (Listening)...";
     } else {
       isListening = false;
       try { speechEngine.stop(); } catch(e){}
