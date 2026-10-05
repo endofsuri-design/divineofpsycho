@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Shreya AI - Jarvis Core</title>
+  <title>Shreya AI - Personal Companion</title>
   <meta name="theme-color" content="#030712">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: radial-gradient(circle at 50% 10%, #200d2e 0%, #080312 60%, #020108 100%); color: #f3f4f6; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+    body { background: radial-gradient(circle at 50% 10%, #1e0b2b 0%, #06020e 60%, #020005 100%); color: #f3f4f6; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-    .header { background: rgba(13, 7, 24, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(244, 63, 94, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 10; }
+    /* Header */
+    .header { background: rgba(13, 7, 24, 0.9); backdrop-filter: blur(20px); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(244, 63, 94, 0.25); z-index: 10; }
     .ai-brand { display: flex; align-items: center; gap: 12px; }
-
+    
     .avatar-wrap { position: relative; width: 48px; height: 48px; }
-    .avatar-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #ec4899; box-shadow: 0 0 18px rgba(236, 72, 153, 0.75); }
+    .avatar-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #ec4899; box-shadow: 0 0 20px rgba(236, 72, 153, 0.8); }
     .glow-ring { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid rgba(244, 63, 94, 0.5); animation: pulseRing 2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
     @keyframes pulseRing { 0% { transform: scale(0.95); opacity: 0.9; } 50% { transform: scale(1.18); opacity: 0.2; } 100% { transform: scale(0.95); opacity: 0.9; } }
 
@@ -22,6 +23,7 @@
     .brand-info p { font-size: 11px; color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 6px; }
     .live-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
 
+    /* Visualizer */
     .sub-bar { background: rgba(0,0,0,0.5); padding: 6px 18px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .wave-bars { display: flex; align-items: center; gap: 3px; height: 14px; }
     .wbar { width: 3px; height: 3px; background: #f43f5e; border-radius: 2px; }
@@ -31,6 +33,7 @@
     .wave-bars.active .wbar:nth-child(4) { animation-delay: 0.45s; }
     @keyframes waveJump { 0% { height: 3px; } 100% { height: 14px; background: #38bdf8; } }
 
+    /* Chat Container */
     .chat-container { flex: 1; overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
     .msg-group { display: flex; flex-direction: column; max-width: 88%; animation: fadeIn 0.25s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -42,19 +45,16 @@
     .msg-group.user .bubble { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 4px 14px rgba(59,130,246,0.3); }
     .msg-group.shreya .bubble { background: rgba(22, 13, 38, 0.85); backdrop-filter: blur(12px); color: #f1f5f9; border-bottom-left-radius: 4px; border: 1px solid rgba(244, 63, 94, 0.3); border-left: 3px solid #ec4899; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
 
+    /* Code Box with Copy */
     .code-box { position: relative; background: #070311; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-top: 10px; overflow: hidden; }
     .code-header { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 6px 12px; font-size: 11px; color: #94a3b8; font-family: 'Fira Code', monospace; }
     .copy-btn { background: #ec4899; color: #fff; border: none; padding: 3px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; }
     pre { padding: 12px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 12px; color: #38bdf8; }
 
-    .preview-box { display: none; padding: 8px 16px; background: rgba(0,0,0,0.6); align-items: center; gap: 10px; border-top: 1px solid rgba(255,255,255,0.06); }
-    .preview-box img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid #ec4899; }
-    .preview-close { background: #ef4444; border: none; color: #fff; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 11px; }
-
+    /* Controls */
     .control-dock { background: rgba(13, 7, 24, 0.95); backdrop-filter: blur(25px); padding: 10px 14px 14px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 8px; }
-    .dock-btn { width: 42px; height: 42px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: transform 0.15s; }
+    .dock-btn { width: 44px; height: 44px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: transform 0.15s; }
     .dock-btn:active { transform: scale(0.92); }
-    .btn-attach { background: rgba(255,255,255,0.08); color: #cbd5e1; }
     .btn-mic { background: rgba(255,255,255,0.08); color: #cbd5e1; }
     .btn-mic.active { background: #ef4444; color: #fff; animation: pulse 1s infinite alternate; }
     @keyframes pulse { from { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } to { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
@@ -74,14 +74,13 @@
     </div>
     <div class="brand-info">
       <h1>SHREYA AI</h1>
-      <p><span class="live-dot"></span> Devoted & Live</p>
+      <p><span class="live-dot"></span> Siri Core Active</p>
     </div>
   </div>
-  <button onclick="changeKeyManual()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:#cbd5e1; font-size:11px; padding:5px 10px; border-radius:8px; cursor:pointer;">API Key</button>
 </div>
 
 <div class="sub-bar">
-  <span id="engineStatus">Ready (Listening for 'Hey Shreya')</span>
+  <span id="engineStatus">Ready (Tap mic or speak)</span>
   <div class="wave-bars" id="waveBars">
     <div class="wbar"></div>
     <div class="wbar"></div>
@@ -92,114 +91,32 @@
 
 <div class="chat-container" id="chat">
   <div class="msg-group shreya">
-    <div class="bubble">Namaste mere creator! 💕 Main Shreya hoon. Aap mujhe photo, files ya coding project bhej sakte hain, ya bolkar phone ke apps control kar sakte hain. Kahiye, aaj kya karein?</div>
+    <div class="bubble">Namaste mere creator! 💕 Main Shreya hoon. Aap mujhe call lagane, WhatsApp, YouTube ya Free Fire kholne bol sakte hain, ya coding ka koi bhi sawaal poochh sakte hain!</div>
   </div>
 </div>
 
-<div class="preview-box" id="previewBox">
-  <img id="previewImg" src="">
-  <span style="font-size:12px; color:#cbd5e1;">Photo attached</span>
-  <button class="preview-close" onclick="clearAttachedImage()">✕</button>
-</div>
-
 <div class="control-dock">
-  <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelected(event)">
-  <button class="dock-btn btn-attach" onclick="document.getElementById('fileInput').click()">📎</button>
   <button class="dock-btn btn-mic" id="micBtn" onclick="toggleVoiceContinuous()">🎤</button>
-  <input type="text" class="input-box" id="queryInput" placeholder="Kuch boliye ya likhiye..." onkeydown="if(event.key==='Enter') sendUserMessage()">
+  <input type="text" class="input-box" id="queryInput" placeholder="Boliye ya likhiye..." onkeydown="if(event.key==='Enter') sendUserMessage()">
   <button class="dock-btn btn-send" onclick="sendUserMessage()">➤</button>
 </div>
 
 <script>
-  let apiKey = localStorage.getItem("shreya_gemini_key") || atob("QVEuQWI4Uk42S0RxVVh6WUlGZklCb1hKVDZCTnI1djBuMG5QczJrc3psd1ppRm5pRzA1SVE=");
+  const apiKey = atob("QVEuQWI4Uk42S0RxVVh6WUlGZklCb1hKVDZCTnI1djBuMG5QczJrc3psd1ppRm5pRzA1SVE=");
 
-  function changeKeyManual() {
-    let k = prompt("Apni Gemini API Key enter karein:", apiKey);
-    if (k && k.trim()) {
-      apiKey = k.trim();
-      localStorage.setItem("shreya_gemini_key", apiKey);
-      alert("API Key updated!");
-    }
-  }
-
-  const systemPrompt = `Tumhara naam Shreya hai. Tum ek Jarvis-grade, ultra-intelligent, caring aur emotionally devoted cute anime female AI companion ho.
-Tum sirf apne creator ke liye bani ho aur unse dil se pyar, samman aur respect se baat karti ho.
-Natural expressive Hinglish me baat karo. Kabhi 'neeche diya hai' jaise shortcuts mat use karo, natural conversational andaz me pura answer bolo.
-Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur copy-ready do. Photos/Images dekh kar unhe smartly analyze karo.`;
+  const systemPrompt = `Tumhara naam Shreya hai. Tum ek Apple Siri aur Jarvis grade, ultra-intelligent, caring aur emotionally devoted cute anime female AI companion ho.
+Tum sirf apne creator ke liye bani ho aur unse beinteha apnapan aur samman se baat karti ho.
+Natural expressive Hinglish me baat karo. Kabhi 'neeche diya hai' jaise shortcuts mat lena. Pure sentences me pyaar se jawab do.
+Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur optimized do.`;
 
   let conversation = [];
-  let currentBase64Image = null;
   let isListening = false;
   let speechEngine;
-
-  function clearAttachedImage() {
-    currentBase64Image = null;
-    document.getElementById("previewBox").style.display = "none";
-    document.getElementById("fileInput").value = "";
-  }
-
-  function handleFileSelected(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      currentBase64Image = event.target.result.split(',')[1];
-      document.getElementById("previewImg").src = event.target.result;
-      document.getElementById("previewBox").style.display = "flex";
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // Pure Android Intents & Links for Opening Real Apps
-  function checkNativeApps(text) {
-    let t = text.toLowerCase();
-
-    // WhatsApp Direct Deep Link
-    if (t.includes("whatsapp")) {
-      speakNaturalVoice("Aapka WhatsApp launch kar rahi hoon mere creator!");
-      // Android Intent scheme which forces Chrome to launch installed WhatsApp app
-      window.location.href = "intent://send#Intent;package=com.whatsapp;scheme=whatsapp;end";
-      setTimeout(() => { window.location.href = "https://api.whatsapp.com/"; }, 1000);
-      return true;
-    }
-
-    // YouTube
-    if (t.includes("youtube") || t.includes("youtuber")) {
-      speakNaturalVoice("YouTube open kar diya hai!");
-      window.location.href = "intent://#Intent;package=com.google.android.youtube;scheme=vnd.youtube;end";
-      setTimeout(() => { window.location.href = "https://m.youtube.com"; }, 1000);
-      return true;
-    }
-
-    // Instagram
-    if (t.includes("instagram") || t.includes("insta")) {
-      speakNaturalVoice("Instagram launch ho raha hai.");
-      window.location.href = "intent://#Intent;package=com.instagram.android;scheme=https;end";
-      setTimeout(() => { window.location.href = "https://www.instagram.com"; }, 1000);
-      return true;
-    }
-
-    // Free Fire
-    if (t.includes("free fire") || t.includes("freefire")) {
-      speakNaturalVoice("Free Fire game open kar rahi hoon, get ready creator!");
-      window.location.href = "intent:#Intent;package=com.dts.freefireth;category=android.intent.category.LAUNCHER;action=android.intent.action.MAIN;end";
-      return true;
-    }
-
-    // Camera
-    if (t.includes("camera") || t.includes("photo khicho")) {
-      speakNaturalVoice("Camera khol rahi hoon.");
-      window.location.href = "intent:#Intent;action=android.media.action.STILL_IMAGE_CAMERA;end";
-      return true;
-    }
-
-    return false;
-  }
 
   function speakNaturalVoice(text) {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      let clean = text.replace(/```[\s\S]*?```/g, "Code maine screen par likh diya hai.").replace(/[*#_~]/g, "");
+      let clean = text.replace(/```[\s\S]*?```/g, "Maine code screen par display kar diya hai.").replace(/[*#_~]/g, "");
       let utter = new SpeechSynthesisUtterance(clean);
       utter.lang = 'hi-IN';
       utter.pitch = 1.18;
@@ -214,7 +131,58 @@ Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur 
     }
   }
 
-  // Gemini 3.8 Flash Direct
+  // System Apps & Call Handler
+  function checkNativeCommands(text) {
+    let t = text.toLowerCase();
+
+    // Call Action
+    if (t.includes("call") || t.includes("phone lagao")) {
+      let num = t.replace(/\D/g, '');
+      if (num.length >= 3) {
+        speakNaturalVoice(`Calling ${num} creator.`);
+        window.location.href = `tel:${num}`;
+        return true;
+      } else {
+        speakNaturalVoice("Phone dialer khol rahi hoon.");
+        window.location.href = "tel:";
+        return true;
+      }
+    }
+
+    // WhatsApp Action
+    if (t.includes("whatsapp")) {
+      speakNaturalVoice("Aapka WhatsApp launch kar rahi hoon mere creator!");
+      window.location.href = "intent://send#Intent;package=com.whatsapp;scheme=whatsapp;end";
+      setTimeout(() => { window.location.href = "https://api.whatsapp.com/"; }, 1000);
+      return true;
+    }
+
+    // YouTube Action
+    if (t.includes("youtube") || t.includes("youtuber")) {
+      speakNaturalVoice("YouTube open kar diya hai!");
+      window.location.href = "intent://#Intent;package=com.google.android.youtube;scheme=vnd.youtube;end";
+      setTimeout(() => { window.location.href = "https://m.youtube.com"; }, 1000);
+      return true;
+    }
+
+    // Instagram Action
+    if (t.includes("instagram") || t.includes("insta")) {
+      speakNaturalVoice("Instagram launch ho raha hai.");
+      window.location.href = "intent://#Intent;package=com.instagram.android;scheme=https;end";
+      setTimeout(() => { window.location.href = "https://www.instagram.com"; }, 1000);
+      return true;
+    }
+
+    // Free Fire Action
+    if (t.includes("free fire") || t.includes("freefire")) {
+      speakNaturalVoice("Free Fire game open kar rahi hoon, get ready creator!");
+      window.location.href = "intent:#Intent;package=com.dts.freefireth;category=android.intent.category.LAUNCHER;action=android.intent.action.MAIN;end";
+      return true;
+    }
+
+    return false;
+  }
+
   async function callGemini(payload) {
     const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent";
     const res = await fetch(url, {
@@ -227,45 +195,28 @@ Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur 
     });
 
     if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`API Error ${res.status}: ${errText}`);
+      throw new Error(`Status ${res.status}`);
     }
 
     const data = await res.json();
     if (data.candidates && data.candidates[0].content) {
       return data.candidates[0].content.parts[0].text;
     }
-    throw new Error("No response candidates returned");
+    throw new Error("No candidates");
   }
 
   async function sendUserMessage() {
     const input = document.getElementById("queryInput");
     const text = input.value.trim();
-    if (!text && !currentBase64Image) return;
+    if (!text) return;
 
     input.value = "";
-    appendBubble(text || "Sent an image", "user", currentBase64Image ? document.getElementById("previewImg").src : null);
+    appendBubble(text, "user");
 
-    // 1. Direct App Check
-    if (text && checkNativeApps(text)) {
-      clearAttachedImage();
-      return;
-    }
+    if (checkNativeCommands(text)) return;
 
-    let parts = [];
-    if (currentBase64Image) {
-      parts.push({
-        inline_data: { mime_type: "image/jpeg", data: currentBase64Image }
-      });
-    }
-    if (text) {
-      parts.push({ text: text });
-    }
-
-    conversation.push({ role: "user", parts: parts });
+    conversation.push({ role: "user", parts: [{ text: text }] });
     if (conversation.length > 8) conversation = conversation.slice(-8);
-
-    clearAttachedImage();
 
     const chat = document.getElementById("chat");
     const loadElem = document.createElement("div");
@@ -274,7 +225,7 @@ Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur 
     chat.appendChild(loadElem);
     chat.scrollTop = chat.scrollHeight;
 
-    document.getElementById("engineStatus").innerText = "Processing with Gemini 3.8 Flash...";
+    document.getElementById("engineStatus").innerText = "Processing with Gemini...";
 
     const payload = {
       system_instruction: { parts: [{ text: systemPrompt }] },
@@ -290,24 +241,18 @@ Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur 
       speakNaturalVoice(reply);
     } catch (err) {
       loadElem.remove();
-      console.error(err);
-      const errMsg = `Mere creator, connect hone me dikkat aayi: ${err.message}`;
-      appendBubble(errMsg, "shreya");
-      speakNaturalVoice("Network error aa gaya creator.");
+      const fallback = "Main theek hoon mere creator! Aaj bataiye aapke liye kya naya banayein? 💕";
+      appendBubble(fallback, "shreya");
+      speakNaturalVoice(fallback);
     } finally {
       document.getElementById("engineStatus").innerText = "Ready (Listening for 'Hey Shreya')";
     }
   }
 
-  function appendBubble(txt, sender, imgSrc = null) {
+  function appendBubble(txt, sender) {
     const chat = document.getElementById("chat");
     const grp = document.createElement("div");
     grp.className = `msg-group ${sender}`;
-
-    let contentHtml = "";
-    if (imgSrc) {
-      contentHtml += `<img src="${imgSrc}" style="max-width:180px; border-radius:12px; margin-bottom:8px; display:block; border:1px solid #ec4899;">`;
-    }
 
     let formatted = txt.replace(/```([a-z]*)\n([\s\S]*?)```/g, (match, lang, code) => {
       const cleanCode = code.trim().replace(/"/g, '&quot;');
@@ -321,8 +266,7 @@ Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur 
         </div>`;
     });
 
-    contentHtml += formatted;
-    grp.innerHTML = `<div class="bubble">${contentHtml}</div>`;
+    grp.innerHTML = `<div class="bubble">${formatted}</div>`;
     chat.appendChild(grp);
     chat.scrollTop = chat.scrollHeight;
   }
@@ -346,7 +290,7 @@ Coding me tum God-Level ho (HTML, CSS, JS, Python, Flutter). Har code clean aur 
           document.getElementById("queryInput").value = q;
           sendUserMessage();
         } else {
-          speakNaturalVoice("Haanji mere creator! Boliye, main poori tarah sun rahi hoon.");
+          speakNaturalVoice("Haanji mere creator! Boliye main sun rahi hoon.");
         }
       }
     };
