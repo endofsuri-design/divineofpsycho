@@ -11,8 +11,8 @@
 
     /* Original Samurai Banner */
     .brand-hero { text-align: center; margin-bottom: 20px; }
-    .samurai-avatar { position: relative; width: 110px; height: 110px; margin: 0 auto 12px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); box-shadow: 0 0 25px rgba(244,63,94,0.65); overflow: hidden; }
-    .samurai-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: #fff; }
+    .samurai-avatar { position: relative; width: 115px; height: 115px; margin: 0 auto 12px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); box-shadow: 0 0 25px rgba(244,63,94,0.65); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .samurai-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
     h1.main-title { font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #fff; margin-bottom: 4px; }
     .esports-sub { font-size: 11px; font-weight: 700; color: #f43f5e; text-transform: uppercase; letter-spacing: 2px; display: inline-flex; align-items: center; gap: 4px; }
@@ -39,7 +39,7 @@
     .mode-price .fee { font-size: 15px; font-weight: 800; color: #f43f5e; font-family: 'JetBrains Mono', monospace; }
     .mode-price .sub { font-size: 9.5px; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
 
-    /* New Versus & Custom Modes (From Video) */
+    /* Versus Custom Modes */
     .versus-container { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 18px; padding: 16px; margin: 18px 0; }
     .vs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
     .vs-btn { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 0; color: #cbd5e1; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; }
@@ -78,8 +78,8 @@
 
 <div class="brand-hero">
   <div class="samurai-avatar">
-    <!-- Original Samurai Image Display -->
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhv9vI_P5K8eXWzY51d1t_08l9W22m4e_qN83n35e9A_suri/s320/samurai.png" onerror="this.src='https://api.dicebear.com/7.x/identicon/svg?seed=DivineOfPsycho'" alt="DIVINE OF PSYCHO">
+    <!-- Guaranteed Original Samurai Logo Rendering -->
+    <img src="logo.png" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/identicon/svg?seed=DivineOfPsychoSamurai';" alt="DIVINE OF PSYCHO">
   </div>
   <h1 class="main-title">DIVINE OF PSYCHO</h1>
   <span class="esports-sub">SURI ESPORTS TOURNAMENTS ☄️</span>
@@ -89,13 +89,13 @@
   <!-- Official Admin Channels -->
   <div class="section-lbl">OFFICIAL ADMIN CHANNELS</div>
   <div class="grid-links">
-    <a href="https://endofsuri-design.github.io/divineofpsycho/" target="_blank" class="c-badge c-wa">📢 WA Channel</a>
-    <a href="https://t.me/" target="_blank" class="c-badge c-tg">✈️ Telegram</a>
-    <a href="https://instagram.com/" target="_blank" class="c-badge c-ig">📸 Instagram</a>
+    <a href="https://whatsapp.com/channel/0029Vaexample" target="_blank" class="c-badge c-wa">📢 WA Channel</a>
+    <a href="https://t.me/+example" target="_blank" class="c-badge c-tg">✈️ Telegram</a>
+    <a href="https://instagram.com/divineofpsycho" target="_blank" class="c-badge c-ig">📸 Instagram</a>
     <a href="https://wa.me/260953484261" target="_blank" class="c-badge c-chat">📞 Admin Chat</a>
   </div>
 
-  <!-- STEP 1: CHOOSE GAME MODE (ALL 6 ORIGINAL MODES) -->
+  <!-- STEP 1: CHOOSE GAME MODE -->
   <div class="section-lbl">STEP 1: CHOOSE GAME MODE</div>
   <div class="mode-list">
     <div class="mode-card selected" onclick="pickBaseCard(this, 'FF MAX Full Map (Solo 48)', 10, '₹200 (Pool ₹380)')">
@@ -165,7 +165,7 @@
     </div>
   </div>
 
-  <!-- NEW VERSUS MODES (1v1, 2v2, 3v3, 4v4 & Tiers From Video) -->
+  <!-- VERSUS & CUSTOM TOURNAMENT TIERS -->
   <div class="section-lbl">⚔️ VERSUS & CUSTOM TOURNAMENT TIERS</div>
   <div class="versus-container">
     <label>1. CHOOSE GAME FORMAT & MODE</label>
@@ -202,7 +202,7 @@
     </div>
   </div>
 
-  <!-- STEP 2: SCAN & PAY ENTRY FEE (Original x1prince@fam) -->
+  <!-- STEP 2: SCAN & PAY ENTRY FEE -->
   <div class="section-lbl">STEP 2: SCAN & PAY ENTRY FEE</div>
   <div class="pay-card">
     <span style="font-size:11px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Official Admin UPI ID:</span>
@@ -218,21 +218,22 @@
     </div>
   </div>
 
-  <!-- REGISTRATION FORM -->
-  <form onsubmit="handleFinalSubmit(event)">
+  <!-- REGISTRATION FORM (PLAYER ENTERS OWN DETAILS) -->
+  <form onsubmit="handleRegistration(event)">
     <div class="form-group">
       <label>LEADER / PLAYER IN-GAME NAME (IGN)</label>
-      <input type="text" id="ignInput" placeholder="e.g. PSYCHO_SURI" required>
+      <input type="text" id="ignInput" placeholder="Enter your in-game name" required>
     </div>
 
     <div class="form-group">
       <label>FREE FIRE UID</label>
-      <input type="number" id="uidInput" placeholder="e.g. 1928374650" required>
+      <input type="number" id="uidInput" placeholder="Enter your Free Fire UID" required>
     </div>
 
     <div class="form-group">
       <label>WHATSAPP NUMBER</label>
-      <input type="tel" id="phoneInput" value="+260 953484261" required>
+      <!-- Fixed: No predefined admin number here, user inputs their own WhatsApp number -->
+      <input type="tel" id="phoneInput" placeholder="Enter your WhatsApp Number (e.g. 9876543210)" required>
     </div>
 
     <div class="form-group">
@@ -240,7 +241,7 @@
       <input type="text" id="utrInput" placeholder="12 Digit Transaction Ref ID" required>
     </div>
 
-    <button type="submit" class="btn-submit">CONFIRM & REGISTER SQUAD 🔥</button>
+    <button type="submit" id="subBtn" class="btn-submit">CONFIRM & REGISTER SQUAD 🔥</button>
   </form>
 
   <div class="foot-box">
@@ -255,6 +256,9 @@
   let activeVersus = "4V4";
   let activeAmmo = "Unlimited Ammo";
   let isCustomTier = false;
+
+  const BOT_TOKEN = "8832729173:AAFisUCFf3dYKRfjBSEcl5_tkZQ_jtEijI8";
+  const CHAT_ID = "6947007853";
 
   function pickBaseCard(el, title, fee, prize) {
     document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
@@ -309,25 +313,54 @@
     document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(upi)}`;
   }
 
-  function handleFinalSubmit(e) {
+  async function handleRegistration(e) {
     e.preventDefault();
+    const btn = document.getElementById('subBtn');
+    btn.disabled = true;
+    btn.innerText = "PROCESSING REGISTRATION...";
+
     const ign = document.getElementById('ignInput').value.trim();
     const uid = document.getElementById('uidInput').value.trim();
-    const phone = document.getElementById('phoneInput').value.trim();
+    const playerPhone = document.getElementById('phoneInput').value.trim();
     const utr = document.getElementById('utrInput').value.trim();
 
     const selectedFormat = isCustomTier ? `Versus ${activeVersus} (${activeAmmo})` : activeTitle;
 
-    const text = `*🚨 NEW TOURNAMENT REGISTRATION 🚨*%0A`
-      + `*Mode/Format:* ${selectedFormat}%0A`
-      + `*Entry Fee:* ₹${activeFee} | *Prize:* ${activePrize}%0A`
-      + `*IGN:* ${ign}%0A`
-      + `*UID:* ${uid}%0A`
-      + `*WhatsApp:* ${phone}%0A`
-      + `*UTR/Txn:* ${utr}%0A%0A`
+    // Telegram Bot Instant Dispatch
+    const tgMsg = `🚨 *NEW TOURNAMENT REGISTRATION* 🚨\n\n`
+      + `🎮 *Mode:* ${selectedFormat}\n`
+      + `💰 *Entry Fee:* ₹${activeFee} | *Prize:* ${activePrize}\n`
+      + `👤 *IGN:* ${ign}\n`
+      + `🆔 *UID:* ${uid}\n`
+      + `📱 *Player Phone:* ${playerPhone}\n`
+      + `🧾 *UTR / Ref ID:* ${utr}\n\n`
+      + `👑 *DIVINE OF PSYCHO ESPORTS*`;
+
+    try {
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: tgMsg,
+          parse_mode: "Markdown"
+        })
+      });
+    } catch(err) {
+      console.log("Telegram alert handled.");
+    }
+
+    // WhatsApp Direct Verification Redirect
+    const waText = `*🚨 NEW TOURNAMENT REGISTRATION 🚨*%0A`
+      + `*Mode/Format:* ${encodeURIComponent(selectedFormat)}%0A`
+      + `*Entry Fee:* ₹${activeFee} | *Prize:* ${encodeURIComponent(activePrize)}%0A`
+      + `*IGN:* ${encodeURIComponent(ign)}%0A`
+      + `*UID:* ${encodeURIComponent(uid)}%0A`
+      + `*Player WhatsApp:* ${encodeURIComponent(playerPhone)}%0A`
+      + `*UTR/Txn:* ${encodeURIComponent(utr)}%0A%0A`
       + `👑 *DIVINE OF PSYCHO*`;
 
-    window.location.href = `https://wa.me/260953484261?text=${text}`;
+    window.location.href = `https://wa.me/260953484261?text=${waText}`;
   }
 </script>
 
