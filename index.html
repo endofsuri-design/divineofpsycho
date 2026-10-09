@@ -208,6 +208,7 @@
   </div>
   <div class="section-title">Step 1: Choose Game Mode</div>
   <div class="modes-container">
+    <!-- ओरिजिनल 6 गेम मोड्स -->
     <div class="mode-card active" onclick="selectMode(this, 'FF MAX FULL MAP (Solo)', '10')">
       <div class="mode-info">
         <h4>FF MAX Full Map (Solo 48)</h4>
@@ -248,15 +249,14 @@
         <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
       </div>
     </div>
-    <!-- Clash Squad 4v4 War -->
-    <div class="mode-card" onclick="selectMode(this, 35, 'Clash Squad 4v4 War')">
-      <div>
-        <div class="mode-title">Clash Squad 4v4 War</div>
-        <div class="mode-detail"><span style="color:#22c55e;font-size:11px;font-weight:600;">Winning Team: ₹60 (Instant)</span></div>
+    <div class="mode-card" onclick="selectMode(this, 'Clash Squad 4v4 War', '35')">
+      <div class="mode-info">
+        <h4>Clash Squad 4v4 War</h4>
+        <p>Winning Team: ₹60 (Instant)</p>
       </div>
-      <div class="mode-fee-wrap">
-        <div class="mode-fee"><span style="color:#ef4444;font-size:18px;font-weight:800;font-family:Rajdhani,sans-serif;">₹35</span></div>
-        <div class="mode-fee-tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      <div class="mode-price">
+        <div class="fee">₹35</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
       </div>
     </div>
     <div class="mode-card" onclick="selectMode(this, 'FF MAX SQUAD', '40')">
@@ -269,7 +269,53 @@
         <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
       </div>
     </div>
+
+    <!-- नए जोड़े गए 4 VERSUS MODES -->
+    <div class="mode-card" onclick="selectMode(this, 'Versus 1v1 Clash (Unlimited Ammo)', '50')">
+      <div class="mode-info">
+        <h4>Versus 1v1 Clash (Unlimited Ammo)</h4>
+        <p>Winner: ₹85</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹50</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="selectMode(this, 'Versus 2v2 Battle (Unlimited Ammo)', '70')">
+      <div class="mode-info">
+        <h4>Versus 2v2 Battle (Unlimited Ammo)</h4>
+        <p>Winning Team: ₹120</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹70</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="selectMode(this, 'Versus 3v3 War (Unlimited Ammo)', '100')">
+      <div class="mode-info">
+        <h4>Versus 3v3 War (Unlimited Ammo)</h4>
+        <p>Winning Team: ₹175</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹100</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="selectMode(this, 'Versus 4v4 Grand Clash (Unlimited Ammo)', '200')">
+      <div class="mode-info">
+        <h4>Versus 4v4 Grand Clash (Unlimited Ammo)</h4>
+        <p>Winning Team: ₹365</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹200</div>
+        <div class="tag"><span style="color:#94a3b8;font-size:10px;font-weight:500;">Entry</span></div>
+      </div>
+    </div>
   </div>
+
   <div class="section-title">Step 2: Scan & Pay Entry Fee</div>
   <div class="upi-box">
     <p>Official Admin UPI ID:</p>
