@@ -11,8 +11,8 @@
 
     /* Original Samurai Banner */
     .brand-hero { text-align: center; margin-bottom: 20px; }
-    .samurai-avatar { position: relative; width: 115px; height: 115px; margin: 0 auto 12px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); box-shadow: 0 0 25px rgba(244,63,94,0.65); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    .samurai-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .samurai-avatar { position: relative; width: 120px; height: 120px; margin: 0 auto 12px; border-radius: 50%; padding: 3px; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); box-shadow: 0 0 25px rgba(244,63,94,0.7); overflow: hidden; background-color: #000; }
+    .samurai-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
 
     h1.main-title { font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #fff; margin-bottom: 4px; }
     .esports-sub { font-size: 11px; font-weight: 700; color: #f43f5e; text-transform: uppercase; letter-spacing: 2px; display: inline-flex; align-items: center; gap: 4px; }
@@ -39,7 +39,7 @@
     .mode-price .fee { font-size: 15px; font-weight: 800; color: #f43f5e; font-family: 'JetBrains Mono', monospace; }
     .mode-price .sub { font-size: 9.5px; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
 
-    /* Versus Custom Modes */
+    /* New Versus & Custom Modes (From Video) */
     .versus-container { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 18px; padding: 16px; margin: 18px 0; }
     .vs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
     .vs-btn { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 0; color: #cbd5e1; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; }
@@ -78,24 +78,24 @@
 
 <div class="brand-hero">
   <div class="samurai-avatar">
-    <!-- Guaranteed Original Samurai Logo Rendering -->
-    <img src="logo.png" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/identicon/svg?seed=DivineOfPsychoSamurai';" alt="DIVINE OF PSYCHO">
+    <!-- Original Samurai Logo (Auto-detecting your local image) -->
+    <img src="samurai.png" onerror="this.onerror=null; this.src='logo.png';" alt="DIVINE OF PSYCHO">
   </div>
   <h1 class="main-title">DIVINE OF PSYCHO</h1>
   <span class="esports-sub">SURI ESPORTS TOURNAMENTS ☄️</span>
 </div>
 
 <div class="main-wrap">
-  <!-- Official Admin Channels -->
+  <!-- Official Admin Channels (Original Active Links) -->
   <div class="section-lbl">OFFICIAL ADMIN CHANNELS</div>
   <div class="grid-links">
-    <a href="https://whatsapp.com/channel/0029Vaexample" target="_blank" class="c-badge c-wa">📢 WA Channel</a>
-    <a href="https://t.me/+example" target="_blank" class="c-badge c-tg">✈️ Telegram</a>
-    <a href="https://instagram.com/divineofpsycho" target="_blank" class="c-badge c-ig">📸 Instagram</a>
+    <a href="https://whatsapp.com/channel/0029Vb3h3qR17Emwtw4r8I0v" target="_blank" class="c-badge c-wa">📢 WA Channel</a>
+    <a href="https://t.me/divineofpsycho" target="_blank" class="c-badge c-tg">✈️ Telegram</a>
+    <a href="https://instagram.com/suri_esports" target="_blank" class="c-badge c-ig">📸 Instagram</a>
     <a href="https://wa.me/260953484261" target="_blank" class="c-badge c-chat">📞 Admin Chat</a>
   </div>
 
-  <!-- STEP 1: CHOOSE GAME MODE -->
+  <!-- STEP 1: CHOOSE GAME MODE (ORIGINAL 6 MODES INTACT) -->
   <div class="section-lbl">STEP 1: CHOOSE GAME MODE</div>
   <div class="mode-list">
     <div class="mode-card selected" onclick="pickBaseCard(this, 'FF MAX Full Map (Solo 48)', 10, '₹200 (Pool ₹380)')">
@@ -165,7 +165,7 @@
     </div>
   </div>
 
-  <!-- VERSUS & CUSTOM TOURNAMENT TIERS -->
+  <!-- NAYE CLASH SQUAD VERSUS TIERS (VIDEO KE FORMAT ME) -->
   <div class="section-lbl">⚔️ VERSUS & CUSTOM TOURNAMENT TIERS</div>
   <div class="versus-container">
     <label>1. CHOOSE GAME FORMAT & MODE</label>
@@ -202,7 +202,7 @@
     </div>
   </div>
 
-  <!-- STEP 2: SCAN & PAY ENTRY FEE -->
+  <!-- STEP 2: SCAN & PAY ENTRY FEE (Original x1prince@fam) -->
   <div class="section-lbl">STEP 2: SCAN & PAY ENTRY FEE</div>
   <div class="pay-card">
     <span style="font-size:11px; color:#94a3b8; font-weight:700; text-transform:uppercase;">Official Admin UPI ID:</span>
@@ -218,7 +218,7 @@
     </div>
   </div>
 
-  <!-- REGISTRATION FORM (PLAYER ENTERS OWN DETAILS) -->
+  <!-- REGISTRATION FORM (Player apna data bharega) -->
   <form onsubmit="handleRegistration(event)">
     <div class="form-group">
       <label>LEADER / PLAYER IN-GAME NAME (IGN)</label>
@@ -232,8 +232,7 @@
 
     <div class="form-group">
       <label>WHATSAPP NUMBER</label>
-      <!-- Fixed: No predefined admin number here, user inputs their own WhatsApp number -->
-      <input type="tel" id="phoneInput" placeholder="Enter your WhatsApp Number (e.g. 9876543210)" required>
+      <input type="tel" id="phoneInput" placeholder="Enter your WhatsApp Number" required>
     </div>
 
     <div class="form-group">
@@ -257,6 +256,7 @@
   let activeAmmo = "Unlimited Ammo";
   let isCustomTier = false;
 
+  // Aapke Original Bot Credentials
   const BOT_TOKEN = "8832729173:AAFisUCFf3dYKRfjBSEcl5_tkZQ_jtEijI8";
   const CHAT_ID = "6947007853";
 
@@ -317,7 +317,7 @@
     e.preventDefault();
     const btn = document.getElementById('subBtn');
     btn.disabled = true;
-    btn.innerText = "PROCESSING REGISTRATION...";
+    btn.innerText = "SUBMITTING TO SYSTEM...";
 
     const ign = document.getElementById('ignInput').value.trim();
     const uid = document.getElementById('uidInput').value.trim();
@@ -326,13 +326,13 @@
 
     const selectedFormat = isCustomTier ? `Versus ${activeVersus} (${activeAmmo})` : activeTitle;
 
-    // Telegram Bot Instant Dispatch
+    // 1. Direct Telegram Bot Notification
     const tgMsg = `🚨 *NEW TOURNAMENT REGISTRATION* 🚨\n\n`
       + `🎮 *Mode:* ${selectedFormat}\n`
       + `💰 *Entry Fee:* ₹${activeFee} | *Prize:* ${activePrize}\n`
       + `👤 *IGN:* ${ign}\n`
       + `🆔 *UID:* ${uid}\n`
-      + `📱 *Player Phone:* ${playerPhone}\n`
+      + `📱 *Player WhatsApp:* ${playerPhone}\n`
       + `🧾 *UTR / Ref ID:* ${utr}\n\n`
       + `👑 *DIVINE OF PSYCHO ESPORTS*`;
 
@@ -347,10 +347,10 @@
         })
       });
     } catch(err) {
-      console.log("Telegram alert handled.");
+      console.log("Bot delivery handled.");
     }
 
-    // WhatsApp Direct Verification Redirect
+    // 2. Direct Admin WhatsApp Redirect (+260 953484261)
     const waText = `*🚨 NEW TOURNAMENT REGISTRATION 🚨*%0A`
       + `*Mode/Format:* ${encodeURIComponent(selectedFormat)}%0A`
       + `*Entry Fee:* ₹${activeFee} | *Prize:* ${encodeURIComponent(activePrize)}%0A`
