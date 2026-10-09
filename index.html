@@ -3,159 +3,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>DIVINE OF PSYCHO | Tournament Registration</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <title>DIVINE OF PSYCHO | Tournament Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: radial-gradient(circle at 50% 15%, #1f0b2e 0%, #06020c 60%, #020005 100%); color: #f8fafc; min-height: 100vh; padding: 20px 14px 40px; display: flex; flex-direction: column; align-items: center; }
+    body { background: #0b1120; color: #f8fafc; min-height: 100vh; padding: 24px 14px 48px; display: flex; flex-direction: column; align-items: center; }
 
-    .header-box { text-align: center; margin-bottom: 20px; }
-    .badge-live { display: inline-block; background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.4); padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; animation: pulse 1.5s infinite alternate; }
-    @keyframes pulse { from { opacity: 0.7; } to { opacity: 1; } }
+    .brand-hero { text-align: center; margin-bottom: 20px; position: relative; }
+    .samurai-glowing-ring { position: relative; width: 110px; height: 110px; margin: 0 auto 12px; border-radius: 50%; padding: 4px; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); box-shadow: 0 0 25px rgba(244,63,94,0.7); }
+    .avatar-internal { width: 100%; height: 100%; border-radius: 50%; background: #070a13; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #000; }
+    .avatar-internal svg { width: 85%; height: 85%; object-fit: contain; }
 
-    h1 { font-size: 26px; font-weight: 800; background: linear-gradient(135deg, #fb7185, #f43f5e, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
-    .subhead { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+    h1.main-title { font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #fff; margin-bottom: 4px; }
+    .esports-sub { font-size: 11.5px; font-weight: 700; color: #f43f5e; text-transform: uppercase; letter-spacing: 2px; display: inline-flex; align-items: center; gap: 4px; }
 
-    .card { background: rgba(15, 10, 26, 0.9); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 24px; padding: 24px 18px; max-width: 480px; width: 100%; box-shadow: 0 15px 40px rgba(0,0,0,0.85); backdrop-filter: blur(15px); }
+    .section-lbl { font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 1.5px; text-transform: uppercase; margin: 16px 0 10px; text-align: left; width: 100%; max-width: 440px; }
+    .grid-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 440px; margin-bottom: 20px; }
+    .c-badge { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 12px; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; text-decoration: none; font-size: 12px; font-weight: 700; transition: transform 0.1s; }
+    .c-badge:active { transform: scale(0.96); }
+    .c-wa { color: #22c55e; border-color: rgba(34,197,94,0.2); }
+    .c-tg { color: #38bdf8; border-color: rgba(56,189,248,0.2); }
+    .c-ig { color: #fb7185; border-color: rgba(251,113,133,0.2); }
+    .c-chat { color: #eab308; border-color: rgba(234,179,8,0.2); }
 
-    .price-strip { background: rgba(244, 63, 94, 0.08); border: 1px dashed rgba(244, 63, 94, 0.4); border-radius: 14px; padding: 12px; margin-bottom: 20px; display: flex; justify-content: space-around; text-align: center; }
-    .strip-item h4 { font-size: 11px; color: #94a3b8; font-weight: 600; }
-    .strip-item p { font-size: 18px; font-weight: 800; color: #10b981; font-family: 'JetBrains Mono', monospace; }
+    .form-container { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(244, 63, 94, 0.25); border-radius: 24px; padding: 22px 16px; max-width: 440px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.85); backdrop-filter: blur(15px); }
+    
+    .form-section { margin-bottom: 16px; text-align: left; }
+    label { display: block; font-size: 11px; font-weight: 800; color: #94a3b8; margin-bottom: 8px; letter-spacing: 0.8px; text-transform: uppercase; }
+    
+    .mode-select-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+    .g-btn { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 0; color: #cbd5e1; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.15s; text-align: center; }
+    .g-btn.active { background: #f43f5e; color: #fff; border-color: #f43f5e; box-shadow: 0 0 10px rgba(244,63,94,0.4); }
 
-    .form-group { margin-bottom: 16px; text-align: left; }
-    label { display: block; font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px; letter-spacing: 0.3px; }
-    input, select { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 13px 15px; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; }
-    input:focus, select:focus { border-color: #f43f5e; box-shadow: 0 0 10px rgba(244, 63, 94, 0.3); }
+    .ammo-switch { display: flex; gap: 8px; }
+    .a-btn { flex: 1; background: rgba(30,41,59,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px; color: #94a3b8; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; }
+    .a-btn.active { background: rgba(34,197,94,0.15); border-color: #22c55e; color: #22c55e; }
 
-    /* Payment Section */
-    .pay-card { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; margin: 18px 0; text-align: center; }
-    .qr-holder { margin: 12px auto; width: 180px; height: 180px; background: #fff; padding: 8px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    select, input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 14px; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s; }
+    select:focus, input:focus { border-color: #f43f5e; }
+
+    .fee-matrix { display: flex; justify-content: space-around; background: rgba(244,63,94,0.04); border: 1px dashed rgba(244,63,94,0.3); border-radius: 12px; padding: 10px; margin: 12px 0 16px; }
+    .matrix-item p.val { font-size: 18px; font-weight: 800; color: #22c55e; font-family: 'JetBrains Mono', monospace; }
+    .matrix-item p.val.red { color: #f43f5e; }
+
+    .pay-panel { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; margin: 16px 0; text-align: center; }
+    .qr-holder { margin: 10px auto; width: 175px; height: 175px; background: #fff; padding: 6px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
     .qr-holder img { width: 100%; height: 100%; object-fit: contain; }
-    .upi-id { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; font-weight: 700; word-break: break-all; margin-top: 6px; }
+    
+    .pay-button-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
+    .upi-display { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #38bdf8; font-weight: 700; }
+    .btn-copy { background: #334155; border: none; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; }
 
-    .btn-submit { width: 100%; background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; border: none; padding: 15px; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4); transition: transform 0.15s; letter-spacing: 0.5px; }
-    .btn-submit:active { transform: scale(0.97); }
+    .btn-main { width: 100%; background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; border: none; padding: 14px; border-radius: 14px; font-size: 14.5px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 20px rgba(244, 63, 94, 0.45); }
+    .btn-main:active { transform: scale(0.97); }
 
-    .contact-box { margin-top: 24px; text-align: center; font-size: 12px; color: #94a3b8; }
-    .contact-link { color: #22c55e; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; }
+    .foot-box { margin-top: 24px; text-align: center; font-size: 11px; color: #475569; }
   </style>
 </head>
 <body>
 
-<div class="header-box">
-  <span class="badge-live">🚨 NOW I AM ACTIVE 🚨</span>
-  <h1>DIVINE OF PSYCHO</h1>
-  <p class="subhead">🎮 1V1 | 2V2 | 3V3 | 4V4 • LIMITED & UNLIMITED</p>
-</div>
-
-<div class="card">
-  <!-- Dynamic Price Header Display -->
-  <div class="price-strip">
-    <div class="strip-item">
-      <h4>ENTRY FEE</h4>
-      <p id="dispEntry">₹50</p>
-    </div>
-    <div class="strip-item">
-      <h4>PRIZE POOL</h4>
-      <p id="dispPrize" style="color:#f43f5e;">₹85</p>
+<div class="brand-hero">
+  <div class="samurai-glowing-ring">
+    <div class="avatar-internal">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="48" fill="#1e1b4b"/>
+        <path d="M20,45 C20,30 30,15 50,15 C70,15 80,30 80,45 C80,50 78,55 75,58 C75,50 65,42 50,42 C35,42 25,50 25,58 C22,55 20,50 20,45 Z" fill="#64748b"/>
+        <path d="M42,20 L58,20 L55,10 L45,10 Z" fill="#eab308"/>
+        <path d="M30,55 C30,75 38,82 50,82 C62,82 70,75 70,55" fill="#ef4444"/>
+        <path d="M42,50 L46,54 L50,50 L54,54 L58,50 L50,62 Z" fill="#ffffff"/>
+        <line x1="15" y1="85" x2="85" y2="15" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        <line x1="85" y1="85" x2="15" y2="15" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      </svg>
     </div>
   </div>
+  <h1 class="main-title">DIVINE OF PSYCHO</h1>
+  <span class="esports-sub">Suri Esports Tournaments ☄️</span>
+</div>
 
-  <form id="regForm" onsubmit="submitTournament(event)">
+<div class="section-lbl">OFFICIAL ADMIN CHANNELS</div>
+<div class="grid-links">
+  <a href="https://endofsuri-design.github.io/divineofpsycho/" target="_blank" class="c-badge c-wa">📢 WA Channel</a>
+  <a href="https://t.me/" target="_blank" class="c-badge c-tg">✈️ Telegram</a>
+  <a href="https://instagram.com/" target="_blank" class="c-badge c-ig">📸 Instagram</a>
+  <a href="https://wa.me/260953484261" target="_blank" class="c-badge c-chat">📞 Admin Chat</a>
+</div>
+
+<div class="form-container">
+  <form id="regForm" onsubmit="submitForm(event)">
     
-    <!-- Match Format Selection -->
-    <div class="form-group">
-      <label>MATCH FORMAT & MODE</label>
-      <select id="matchFormat" required>
-        <option value="1v1 Unlimited">1V1 Clash Squad (Unlimited Ammo)</option>
-        <option value="1v1 Limited">1V1 Clash Squad (Limited Ammo)</option>
-        <option value="2v2 Unlimited">2V2 Clash Squad (Unlimited Ammo)</option>
-        <option value="2v2 Limited">2V2 Clash Squad (Limited Ammo)</option>
-        <option value="3v3 Unlimited">3V3 Clash Squad (Unlimited Ammo)</option>
-        <option value="3v3 Limited">3V3 Clash Squad (Limited Ammo)</option>
-        <option value="4v4 Unlimited" selected>4V4 Clash Squad (Unlimited Ammo)</option>
-        <option value="4v4 Limited">4V4 Clash Squad (Limited Ammo)</option>
-      </select>
+    <div class="form-section">
+      <label>1. CHOOSE GAME FORMAT & MODE</label>
+      <div class="mode-select-grid">
+        <button type="button" class="g-btn" id="m1" onclick="setMode('1v1')">1V1</button>
+        <button type="button" class="g-btn" id="m2" onclick="setMode('2v2')">2V2</button>
+        <button type="button" class="g-btn" id="m3" onclick="setMode('3v3')">3V3</button>
+        <button type="button" class="g-btn active" id="m4" onclick="setMode('4v4')">4V4</button>
+      </div>
+      <div class="ammo-switch">
+        <button type="button" class="a-btn" id="aLtd" onclick="setAmmo('Limited')">LIMITED AMMO</button>
+        <button type="button" class="a-btn active" id="aUnl" onclick="setAmmo('Unlimited')">UNLIMITED AMMO</button>
+      </div>
     </div>
 
-    <!-- Entry Tier & Prize Pool -->
-    <div class="form-group">
-      <label>SELECT ENTRY & PRIZE TIER</label>
-      <select id="entryTier" onchange="syncPricing()" required>
-        <option value="50_85" selected>Entry: ₹50 | Prize Pool: ₹85</option>
+    <div class="form-section">
+      <label>SELECT TOURNAMENT TIER</label>
+      <select id="tierSelector" onchange="syncPricing()" required>
+        <option value="50_85">Entry: ₹50 | Prize Pool: ₹85</option>
         <option value="70_120">Entry: ₹70 | Prize Pool: ₹120</option>
-        <option value="100_175">Entry: ₹100 | Prize Pool: ₹175</option>
+        <option value="100_175" selected>Entry: ₹100 | Prize Pool: ₹175</option>
         <option value="200_365">Entry: ₹200 | Prize Pool: ₹365</option>
       </select>
     </div>
 
-    <!-- Player / Leader Details -->
-    <div class="form-group">
-      <label>LEADER / PLAYER IN-GAME NAME (IGN)</label>
-      <input type="text" id="playerName" placeholder="e.g. PSYCHO_VIP" required>
-    </div>
-
-    <div class="form-group">
-      <label>FREE FIRE UID</label>
-      <input type="number" id="playerUid" placeholder="e.g. 1928374650" required>
-    </div>
-
-    <div class="form-group">
-      <label>WHATSAPP NUMBER</label>
-      <input type="tel" id="playerPhone" placeholder="e.g. 9876543210" required>
-    </div>
-
-    <!-- Payment Gateway / QR Section -->
-    <div class="pay-card">
-      <h3 style="font-size:13px; color:#f8fafc; font-weight:700;">SCAN & PAY ENTRY FEE</h3>
-      <div class="qr-holder">
-        <!-- Purana Payment QR Image -->
-        <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=suriya200612-1@okaxis&pn=DivineOfPsycho&am=50" alt="Payment QR">
+    <div class="fee-matrix">
+      <div class="matrix-item">
+        <span style="font-size:10px; color:#94a3b8; font-weight:700;">ENTRY FEE</span>
+        <p class="val" id="feeVal">₹100</p>
       </div>
-      <div class="upi-id">suriya200612-1@okaxis</div>
-      <p style="font-size:11px; color:#94a3b8; margin-top:6px;">Screenshot payment receipt & enter Transaction UTR below</p>
+      <div class="matrix-item">
+        <span style="font-size:10px; color:#94a3b8; font-weight:700;">PRIZE POOL</span>
+        <p class="val red" id="prizeVal">₹175</p>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>PAYMENT UTR / REF NUMBER</label>
+    <div class="form-section">
+      <label>LEADER / PLAYER IN-GAME NAME (IGN)</label>
+      <input type="text" id="leaderIGN" placeholder="e.g. PSYCHO_SURI" required>
+    </div>
+
+    <div class="form-section">
+      <label>FREE FIRE UID</label>
+      <input type="number" id="playerUID" placeholder="e.g. 1928374650" required>
+    </div>
+
+    <div class="form-section">
+      <label>WHATSAPP NUMBER</label>
+      <input type="tel" id="whatsappNum" value="+260 953484261" required>
+    </div>
+
+    <div class="pay-panel">
+      <span style="font-size:11px; color:#94a3b8; font-weight:700; text-transform:uppercase;">SCAN & PAY ENTRY</span>
+      <div class="qr-holder">
+        <img id="qrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=suriya200612-1@okaxis&pn=DivineOfPsycho&am=100" alt="Payment QR">
+      </div>
+      <div class="pay-button-row">
+        <div class="upi-display">suriya200612-1@okaxis</div>
+        <button type="button" class="btn-copy" onclick="copyUPI()">COPY</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <label>TRANSACTION UTR / REF NO.</label>
       <input type="text" id="txnRef" placeholder="12 Digit Transaction Ref ID" required>
     </div>
 
-    <button type="submit" class="btn-submit">CONFIRM & REGISTER SQUAD 🔥</button>
+    <button type="submit" class="btn-main">CONFIRM & REGISTER SQUAD 🔥</button>
   </form>
 
-  <div class="contact-box">
-    <p>⚔️ DM FOR DIRECT VERSUS MATCHES ⏩</p>
-    <a href="https://wa.me/260953484261" target="_blank" class="contact-link">
-      📲 WhatsApp: +260 953484261
-    </a>
-    <p style="margin-top:10px; font-size:10px; color:#64748b;">👑 POWERED BY DIVINE OF PSYCHO 🪽</p>
+  <div class="foot-box">
+    POWERED BY DIVINE OF PSYCHO • ALL RIGHTS RESERVED
   </div>
 </div>
 
 <script>
-  function syncPricing() {
-    const tier = document.getElementById("entryTier").value;
-    const [entry, prize] = tier.split("_");
-    document.getElementById("dispEntry").innerText = "₹" + entry;
-    document.getElementById("dispPrize").innerText = "₹" + prize;
+  let selectedMode = "4V4";
+  let selectedAmmo = "Unlimited";
 
-    // Dynamic QR update for selected entry fee
-    const upiLink = `upi://pay?pa=suriya200612-1@okaxis&pn=DivineOfPsycho&am=${entry}`;
-    document.getElementById("qrImage").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiLink)}`;
+  function setMode(mode) {
+    selectedMode = mode;
+    ['m1','m2','m3','m4'].forEach(id => document.getElementById(id).classList.remove('active'));
+    if(mode === '1v1') document.getElementById('m1').classList.add('active');
+    if(mode === '2v2') document.getElementById('m2').classList.add('active');
+    if(mode === '3v3') document.getElementById('m3').classList.add('active');
+    if(mode === '4v4') document.getElementById('m4').classList.add('active');
   }
 
-  function submitTournament(e) {
-    e.preventDefault();
-    const format = document.getElementById("matchFormat").value;
-    const tier = document.getElementById("entryTier").value.split("_");
-    const ign = document.getElementById("playerName").value.trim();
-    const uid = document.getElementById("playerUid").value.trim();
-    const phone = document.getElementById("playerPhone").value.trim();
-    const utr = document.getElementById("txnRef").value.trim();
+  function setAmmo(ammo) {
+    selectedAmmo = ammo;
+    document.getElementById('aLtd').classList.remove('active');
+    document.getElementById('aUnl').classList.remove('active');
+    if(ammo === 'Limited') document.getElementById('aLtd').classList.add('active');
+    if(ammo === 'Unlimited') document.getElementById('aUnl').classList.add('active');
+  }
 
-    const textMsg = `*🚨 NEW TOURNAMENT REGISTRATION 🚨*%0A`
-      + `*Format:* ${format}%0A`
+  function syncPricing() {
+    const tier = document.getElementById("tierSelector").value;
+    const [entry, prize] = tier.split("_");
+    document.getElementById("feeVal").innerText = "₹" + entry;
+    document.getElementById("prizeVal").innerText = "₹" + prize;
+
+    const upiLink = `upi://pay?pa=suriya200612-1@okaxis&pn=DivineOfPsycho&am=${entry}`;
+    document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiLink)}`;
+  }
+
+  function copyUPI() {
+    navigator.clipboard.writeText("suriya200612-1@okaxis");
+    alert("UPI ID Copied Successfully!");
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    const ign = document.getElementById("leaderIGN").value.trim();
+    const uid = document.getElementById("playerUID").value.trim();
+    const phone = document.getElementById("whatsappNum").value.trim();
+    const utr = document.getElementById("txnRef").value.trim();
+    const tier = document.getElementById("tierSelector").value.split("_");
+
+    const text = `*🚨 NEW TOURNAMENT REGISTRATION 🚨*%0A`
+      + `*Format:* ${selectedMode} (${selectedAmmo} Ammo)%0A`
       + `*Entry:* ₹${tier[0]} | *Prize:* ₹${tier[1]}%0A`
       + `*IGN:* ${ign}%0A`
       + `*UID:* ${uid}%0A`
@@ -163,8 +218,7 @@
       + `*UTR/Txn:* ${utr}%0A%0A`
       + `👑 *DIVINE OF PSYCHO*`;
 
-    // Direct WhatsApp Confirmation
-    window.location.href = `https://wa.me/260953484261?text=${textMsg}`;
+    window.location.href = `https://wa.me/260953484261?text=${text}`;
   }
 </script>
 
