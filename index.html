@@ -84,6 +84,36 @@
       letter-spacing: 1px;
     }
 
+    /* Classic Mode Cards */
+    .modes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .mode-card {
+      background: #0b0f19;
+      border: 1px solid #232d42;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .mode-card.active {
+      border-color: #ff385c;
+      background: rgba(255, 56, 92, 0.08);
+      box-shadow: 0 0 14px rgba(255, 56, 92, 0.25);
+    }
+    .mode-info h4 { font-size: 13px; color: #fff; margin-bottom: 2px; }
+    .mode-info p { font-size: 11px; color: #2ed573; font-weight: bold; }
+    .mode-price { text-align: right; }
+    .mode-price .fee { font-size: 14px; font-weight: 900; color: #ff4757; font-family: 'JetBrains Mono', monospace; }
+    .mode-price .tag { font-size: 10px; color: #8892b0; text-transform: uppercase; }
+
+    /* Custom Versus Selection */
     .selection-box {
       background: #0e1424;
       border: 1px solid #232d42;
@@ -167,6 +197,7 @@
     .matrix-col .val.fee { color: #22c55e; }
     .matrix-col .val.prize { color: #ff385c; }
 
+    /* Scan & Pay Card */
     .upi-box {
       border: 1px dashed #00e5ff;
       background: rgba(0, 229, 255, 0.04);
@@ -227,6 +258,7 @@
       text-align: center;
     }
 
+    /* Form Fields */
     .form-group { margin-bottom: 12px; }
     label {
       display: block;
@@ -289,7 +321,67 @@
     <a href="https://api.whatsapp.com/send?phone=260953484261&text=Hello%20Admin%20Suri%20Esports" target="_blank" class="support-btn" style="color: #ffbb00;">📞 Admin Chat</a>
   </div>
 
-  <div class="section-title">1. Choose Game Format & Mode</div>
+  <!-- SECTION 1: CLASSIC GAME MODES -->
+  <div class="section-title">Step 1: Choose Game Mode</div>
+  <div class="modes-container">
+    <div class="mode-card active" onclick="selectClassicMode(this, 'FF MAX Full Map (Solo 48)', 10, '₹200 (Pool ₹380)')">
+      <div class="mode-info">
+        <h4>FF MAX Full Map (Solo 48)</h4>
+        <p>1st Prize: ₹200 (Pool ₹380)</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹10</div>
+        <div class="tag">Entry</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="selectClassicMode(this, 'Clash Squad 1v1 Duel', 25, '₹40 (Instant)')">
+      <div class="mode-info">
+        <h4>Clash Squad 1v1 Duel</h4>
+        <p>Winner: ₹40 (Instant)</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹25</div>
+        <div class="tag">Entry</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="selectClassicMode(this, 'Lone Wolf 1v1 Deathmatch', 25, '₹40 (Instant)')">
+      <div class="mode-info">
+        <h4>Lone Wolf 1v1 Deathmatch</h4>
+        <p>Winner: ₹40 (Instant)</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹25</div>
+        <div class="tag">Entry</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="selectClassicMode(this, 'CS 2v2 Duo Showdown', 30, '₹50')">
+      <div class="mode-info">
+        <h4>CS 2v2 Duo Showdown</h4>
+        <p>Winning Team: ₹50</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹30</div>
+        <div class="tag">Entry</div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="selectClassicMode(this, 'FF Max Squad (12 Squads)', 40, '1st: ₹240 | 2nd: ₹120')">
+      <div class="mode-info">
+        <h4>FF Max Squad (12 Squads)</h4>
+        <p>1st: ₹240 | 2nd: ₹120</p>
+      </div>
+      <div class="mode-price">
+        <div class="fee">₹40</div>
+        <div class="tag">Entry</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: VERSUS & CUSTOM TIERS -->
+  <div class="section-title">Or Choose Custom Versus Match</div>
   <div class="selection-box">
     <div class="grid-formats">
       <button type="button" class="btn-fmt" id="fmt1" onclick="pickFormat('1V1')">1V1</button>
@@ -305,24 +397,26 @@
 
     <label style="margin-bottom:6px;">SELECT TOURNAMENT TIER</label>
     <select id="tierSelector" onchange="onTierChanged()">
+      <option value="none">-- Select Tier to Activate Versus --</option>
       <option value="50_85">Entry: ₹50 | Prize Pool: ₹85</option>
       <option value="70_120">Entry: ₹70 | Prize Pool: ₹120</option>
-      <option value="100_175" selected>Entry: ₹100 | Prize Pool: ₹175</option>
+      <option value="100_175">Entry: ₹100 | Prize Pool: ₹175</option>
       <option value="200_365">Entry: ₹200 | Prize Pool: ₹365</option>
     </select>
 
     <div class="matrix-display">
       <div class="matrix-col">
         <div class="lbl">ENTRY FEE</div>
-        <div class="val fee" id="dispFee">₹100</div>
+        <div class="val fee" id="dispFee">₹10</div>
       </div>
       <div class="matrix-col">
         <div class="lbl">PRIZE POOL</div>
-        <div class="val prize" id="dispPrize">₹175</div>
+        <div class="val prize" id="dispPrize">₹200</div>
       </div>
     </div>
   </div>
 
+  <!-- SECTION 3: SCAN & PAY -->
   <div class="section-title">Step 2: Scan & Pay Entry Fee</div>
   <div class="upi-box">
     <p>Official Admin UPI ID:</p>
@@ -332,12 +426,13 @@
     </div>
 
     <div class="qr-frame">
-      <img id="upiQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=x1prince@fam&pn=SuriEsports&am=100&cu=INR" alt="QR Code">
+      <img id="upiQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=x1prince@fam&pn=SuriEsports&am=10&cu=INR" alt="QR Code">
     </div>
 
-    <a id="payIntentBtn" href="upi://pay?pa=x1prince@fam&pn=SuriEsports&am=100&cu=INR" class="pay-app-btn">⚡ PAY ₹100 VIA UPI APPS (GPAY / PHONEPE)</a>
+    <a id="payIntentBtn" href="upi://pay?pa=x1prince@fam&pn=SuriEsports&am=10&cu=INR" class="pay-app-btn">⚡ PAY ₹10 VIA UPI APPS (GPAY / PHONEPE)</a>
   </div>
 
+  <!-- SECTION 4: FORM -->
   <div class="section-title">Step 3: Registration Form</div>
   <form id="tournamentForm">
     <div class="form-group">
@@ -362,15 +457,43 @@
 </div>
 
 <script>
+  let selectedModeName = "FF MAX Full Map (Solo 48)";
+  let currentFee = 10;
+  let currentPrize = "₹200 (Pool ₹380)";
+  let isVersusActive = false;
+
   let currentFormat = "4V4";
   let currentAmmo = "Unlimited Ammo";
-  let currentFee = 100;
-  let currentPrize = 175;
 
   const BOT_TOKEN = "8832729173:AAFisUCFf3dYKRfjBSEcl5_tkZQ_jtEijI8";
   const CHAT_ID = "6947007853";
   const ADMIN_WHATSAPP = "260953484261";
   const OFFICIAL_UPI = "x1prince@fam";
+
+  function updatePayment(fee, prize) {
+    currentFee = fee;
+    currentPrize = prize;
+
+    document.getElementById('dispFee').innerText = "₹" + currentFee;
+    document.getElementById('dispPrize').innerText = typeof prize === 'number' ? "₹" + prize : prize.split(' ')[0];
+
+    const upiUri = `upi://pay?pa=${OFFICIAL_UPI}&pn=SuriEsports&am=${currentFee}&cu=INR`;
+    document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiUri)}`;
+    
+    const payBtn = document.getElementById('payIntentBtn');
+    payBtn.href = upiUri;
+    payBtn.innerText = `⚡ PAY ₹${currentFee} VIA UPI APPS (GPAY / PHONEPE)`;
+  }
+
+  function selectClassicMode(card, title, fee, prize) {
+    isVersusActive = false;
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    document.getElementById('tierSelector').value = "none";
+
+    selectedModeName = title;
+    updatePayment(fee, prize);
+  }
 
   function pickFormat(fmt) {
     currentFormat = fmt;
@@ -379,6 +502,7 @@
     if(fmt === '2V2') document.getElementById('fmt2').classList.add('active');
     if(fmt === '3V3') document.getElementById('fmt3').classList.add('active');
     if(fmt === '4V4') document.getElementById('fmt4').classList.add('active');
+    if(isVersusActive) selectedModeName = `${currentFormat} (${currentAmmo})`;
   }
 
   function pickAmmo(ammo) {
@@ -387,23 +511,22 @@
     document.getElementById('ammoUnl').classList.remove('active');
     if(ammo === 'Limited Ammo') document.getElementById('ammoLtd').classList.add('active');
     if(ammo === 'Unlimited Ammo') document.getElementById('ammoUnl').classList.add('active');
+    if(isVersusActive) selectedModeName = `${currentFormat} (${currentAmmo})`;
   }
 
   function onTierChanged() {
     const val = document.getElementById('tierSelector').value;
+    if(val === "none") return;
+
+    isVersusActive = true;
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+
     const parts = val.split('_');
-    currentFee = parts[0];
-    currentPrize = parts[1];
+    const fee = parts[0];
+    const prize = parts[1];
 
-    document.getElementById('dispFee').innerText = "₹" + currentFee;
-    document.getElementById('dispPrize').innerText = "₹" + currentPrize;
-
-    const upiUri = `upi://pay?pa=${OFFICIAL_UPI}&pn=SuriEsports&am=${currentFee}&cu=INR`;
-    document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiUri)}`;
-    
-    const payBtn = document.getElementById('payIntentBtn');
-    payBtn.href = upiUri;
-    payBtn.innerText = `⚡ PAY ₹${currentFee} VIA UPI APPS (GPAY / PHONEPE)`;
+    selectedModeName = `${currentFormat} (${currentAmmo})`;
+    updatePayment(fee, "₹" + prize);
   }
 
   function copyUpi() {
@@ -421,15 +544,14 @@
     statusText.style.color = "#00e5ff";
     statusText.innerText = "Submitting registration...";
 
-    const matchName = `${currentFormat} (${currentAmmo})`;
     const team = document.getElementById("teamName").value.trim();
     const uid = document.getElementById("ffUid").value.trim();
     const phone = document.getElementById("whatsappNum").value.trim();
     const utr = document.getElementById("paymentUtr").value.trim();
 
     const telegramMsg = "🚨 *NEW TOURNAMENT REGISTRATION* 🚨\n\n" +
-                        "*Mode:* " + matchName + "\n" +
-                        "*Entry Fee:* ₹" + currentFee + " | *Prize Pool:* ₹" + currentPrize + "\n" +
+                        "*Mode:* " + selectedModeName + "\n" +
+                        "*Entry Fee:* ₹" + currentFee + " | *Prize:* " + currentPrize + "\n" +
                         "*Player / IGN:* " + team + "\n" +
                         "*FF UID:* " + uid + "\n" +
                         "*WhatsApp:* " + phone + "\n" +
@@ -437,8 +559,8 @@
                         "👑 *DIVINE OF PSYCHO*";
 
     const waText = "*🚨 NEW TOURNAMENT REGISTRATION 🚨*%0A%0A" +
-                   "*Mode:* " + encodeURIComponent(matchName) + "%0A" +
-                   "*Entry Fee:* ₹" + encodeURIComponent(currentFee) + " | *Prize:* ₹" + encodeURIComponent(currentPrize) + "%0A" +
+                   "*Mode:* " + encodeURIComponent(selectedModeName) + "%0A" +
+                   "*Entry Fee:* ₹" + encodeURIComponent(currentFee) + " | *Prize:* " + encodeURIComponent(currentPrize) + "%0A" +
                    "*IGN:* " + encodeURIComponent(team) + "%0A" +
                    "*UID:* " + encodeURIComponent(uid) + "%0A" +
                    "*WhatsApp:* " + encodeURIComponent(phone) + "%0A" +
